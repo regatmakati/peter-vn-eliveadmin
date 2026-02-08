@@ -1,0 +1,7 @@
+/.idea
+/data/runtime
+/public/upload
+/vendor
+/data/config/database.php
+.DS_Store
+*.txt
