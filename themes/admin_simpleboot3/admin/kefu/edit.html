@@ -1,0 +1,35 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('kefu/index')}">所有客服</a></li>
+        <li><a href="{:url('kefu/add')}">添加客服</a></li>
+        <li class="active"><a>编辑客服</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('kefu/editPost')}">
+        <div class="form-group">
+            <label for="input-nickname_name" class="col-sm-2 control-label">客服昵称<span class="form-required">*</span></label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-nickname" name="nickname" value="{$kefu.nickname}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-nickname_name" class="col-sm-2 control-label">客服链接<span class="form-required">*</span></label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-kefu_url" name="kefu_url" value="{$kefu.kefu_url}">
+				<p class="help-block">注册链接：http://www.53kf.com/reg/index?yx_from=210260</p>
+            </div>
+        </div>		
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="id" value="{$kefu.id}">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+                <a class="btn btn-default" href="{:url('kefu/index')}">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

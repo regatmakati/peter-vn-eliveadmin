@@ -1,0 +1,27 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:url('nickname/index')}">所有随机昵称</a></li>
+			<li class="active"><a href="{:url('nickname/add')}">添加随机昵称</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('nickname/addPost')}">
+			<div class="form-group">
+				<label for="input-name" class="col-sm-2 control-label">随机昵称</label>
+				<div class="col-md-6 col-sm-10">
+					<textarea class="form-control" name="name" id="input-name" ></textarea>
+					<p class="help-block">设置多个昵称，请用英文状态下逗号隔开</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+					<a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

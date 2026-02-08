@@ -1,0 +1,74 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('setting/huawei')}">华为云存储</a></li>
+    </ul>
+    <form method="post" class="js-ajax-form margin-top-20" action="{:url('setting/huaweiPost')}">
+
+        <div class="form-group">
+            <label>AccessKey<span class="form-required">*</span></label>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="accessKey"
+                           value="{$accessKey|default=''}">
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>SecretKey<span class="form-required">*</span></label>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="secretKey"
+                           value="{$secretKey|default=''}">
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Endpoint<span class="form-required">*</span></label>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="endPoint"
+                           value="{$endPoint|default=''}">
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Bucket<span class="form-required">*</span></label>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="Bucket"
+                           value="{$Bucket|default=''}">
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>访问域名<span class="form-required">*</span></label>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="domain"
+                           value="{$domain|default=''}">
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit" data-refresh="0">{:lang('SAVE')}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

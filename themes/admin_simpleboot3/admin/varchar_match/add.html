@@ -1,0 +1,143 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs">
+            <li><a href="{:url('index')}">比赛列表</a></li>
+            <li class="active"><a>{:lang('ADD')}</a></li>
+            <li><a href="{:url('batchAdd')}">批量添加</a></li>
+        </ul>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="">
+
+        <div class="form-group">
+            <label for="input-type" class="col-sm-2 control-label"><span class="form-required">*</span>球队类型</label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="type">
+                    <option value="0">----选择球队类型---</option>
+                    <volist name="match_class" id="v">
+                        <option value="{$key}" {$data['type']==$key?'selected':''}>{$v}</option>
+                    </volist>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-user_login" class="col-sm-2 control-label">封面图</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="hidden" name="thumb" id="thumbnail_12" value="{$data.thumb}">
+                <a href="javascript:uploadOneImage('图片上传','#thumbnail_12','','liveclass');">
+                    <img src="{$data['thumb']?get_upload_path($data['thumb']):'__TMPL__/public/assets/images/default-thumbnail.png'}"
+                         id="thumbnail_12-preview"
+                         style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                </a>
+                图片尺寸： 50 X 50
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-name" class="col-sm-2 control-label">联赛名称</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="name" value="{$data['name']}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-name" class="col-sm-2 control-label">A战队</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="home_team" value="{$data.home_team}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-user_login" class="col-sm-2 control-label">A战队图片</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="hidden" name="home_icon" id="thumbnail" value="{$data.home_icon}">
+                <a href="javascript:uploadOneImage('图片上传','#thumbnail','','liveclass');">
+                    <img src="{$data['home_icon']?get_upload_path($data['home_icon']):'__TMPL__/public/assets/images/default-thumbnail.png'}"
+                         id="thumbnail-preview"
+                         style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                </a>
+                图片尺寸： 50 X 50
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-name" class="col-sm-2 control-label">B战队</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="away_team" value="{$data.away_team}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-user_login" class="col-sm-2 control-label">B战队图片</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="hidden" name="away_icon" id="thumbnailB" value="{$data.away_icon}">
+                <a href="javascript:uploadOneImage('图片上传','#thumbnailB','','liveclass');">
+                    <img src="{$data['away_icon']?get_upload_path($data['away_icon']):'__TMPL__/public/assets/images/default-thumbnail.png'}"
+                         id="thumbnailB-preview"
+                         style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                </a>
+                图片尺寸： 50 X 50
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-name" class="col-sm-2 control-label"><span class="form-required">*</span>开始时间</label>
+            <div class="col-md-6 col-sm-10">
+                <input class="form-control js-bootstrap-datetime" readonly name="start_time" value="{:date('Y-m-d H:i:s', $data['start_time']?$data['start_time']:time())}" aria-invalid="false">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-name" class="col-sm-2 control-label"><span class="form-required">*</span>直播地址</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="view_url" value="{$data.view_url}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-bonus_switch" class="col-sm-2 control-label">是否热门</label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="hot_status">
+                    <option value="1">是</option>
+                    <option value="0" <eq name="data.hot_status" value="0">selected</eq>>否</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-bonus_switch" class="col-sm-2 control-label">是否推荐</label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="rocm_status">
+                    <option value="1">是</option>
+                    <option value="0" <eq name="data.rocm_status" value="0">selected</eq>>否</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input-bonus_switch" class="col-sm-2 control-label">直播状态</label>
+            <div class="col-md-6 col-sm-10">
+                <select class="form-control" name="status">
+                    <option value="0">未开始/进行中</option>
+                    <option value="1" <eq name="data.status" value="1">selected</eq>>已结束</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+                <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    (function(){
+        $('.btn-cancel-thumbnail').click(function () {
+            $('#thumbnail-preview').attr('src', '__TMPL__/public/assets/images/default-thumbnail.png');
+            $('#thumbnail').val('');
+        });
+
+    })()
+</script>
+</body>
+</html>

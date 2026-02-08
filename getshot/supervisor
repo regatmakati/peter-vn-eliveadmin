@@ -1,0 +1,8 @@
+[program:autoGetLiveShot]
+process_name=autoGetLiveShot
+command=/opt/remi/php72/root/usr/bin/php /data/wwwroot/eliveadmin/getshot/cron.php
+autostart=true
+autorestart=true
+user=root
+redirect_stderr=true
+stdout_logfile=/data/wwwlogs/autoGetLiveShot-supervisor.log

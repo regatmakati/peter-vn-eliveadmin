@@ -1,0 +1,75 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a >直播流地址</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form margin-top-20">
+			<foreach name="lists" item="vo">
+            <div class="form-group">
+				<label for="input-rtmp" class="col-sm-2 control-label"><span class="form-required">*</span>{$vo.name}</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" value="{$vo.url}">
+				</div>
+				<a class="btn btn-md btn-info copyurl" data-value="{$vo.url}">复制</a>
+			</div>
+			</foreach>
+
+<!--			<div class="form-group">-->
+<!--				<label for="input-rtmp" class="col-sm-2 control-label"><span class="form-required">*</span>rtmp地址</label>-->
+<!--				<div class="col-md-6 col-sm-10">-->
+<!--					<input type="text" class="form-control" id="input-rtmp" name="rtmp">-->
+<!--				</div>-->
+<!--				<a class="btn btn-md btn-info" data-value="">复制</a>-->
+<!--			</div>-->
+
+<!--			<div class="form-group">-->
+<!--				<label for="input-m3u8" class="col-sm-2 control-label"><span class="form-required">*</span>m3u8地址</label>-->
+<!--				<div class="col-md-6 col-sm-10">-->
+<!--					<input type="text" class="form-control" id="input-m3u8" name="m3u8">-->
+<!--				</div>-->
+<!--				<a class="btn btn-md btn-info" data-value="">复制</a>-->
+<!--			</div>-->
+<!--            -->
+<!--            -->
+<!--            <div class="form-group">-->
+<!--				<label for="input-pull" class="col-sm-2 control-label"><span class="form-required">*</span>推流地址</label>-->
+<!--				<div class="col-md-6 col-sm-10">-->
+<!--					<input type="text" class="form-control" id="input-pull" name="pull" value="">-->
+<!--				</div>-->
+<!--				<a class="btn btn-md btn-info" data-value="">复制</a>-->
+<!--			</div>-->
+            
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+	<script>
+
+		$(function(){
+
+			Wind.use('layer');
+
+			$('.copyurl').click(function(){
+				var _this=$(this);
+				var value=_this.data('value');
+				copyUrl2(value);
+			});
+
+			function copyUrl2(value){
+				var oInput = document.createElement('input');
+				oInput.value = value;
+				document.body.appendChild(oInput);
+				oInput.select();// 选择对象
+				document.execCommand("Copy");// 执行浏览器复制命令
+				oInput.className ='oInput';
+				oInput.style.display='none';
+				layer.msg('复制成功')
+				// alert('复制成功');
+			}
+
+		})
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs">
+            <li class="active"><a>比赛列表</a></li>
+            <li><a href="{:url('add')}">{:lang('ADD')}</a></li>
+            <li><a href="{:url('batchAdd')}">批量添加</a></li>
+        </ul>
+    </ul>
+    <form class="well form-inline margin-top-20" action="{:url(request()->action())}" method="get">
+        比赛类型：
+        <select class="form-control" name="type">
+            <option value="">全部</option>
+            <volist name="match_class" id="v">
+                <option value="{$key}" {:input('request.type')==$key?'selected':''}>{$v}</option>
+            </volist>
+        </select>
+        A战队名称：
+        <input class="form-control" type="text" name="home_team" style="width: 200px;" value="{:input('request.home_team')}"
+               placeholder="请输入A战队名称">
+        B战队名称：
+        <input class="form-control" type="text" name="away_team" style="width: 200px;" value="{:input('request.away_team')}"
+               placeholder="请输入B战队名称">
+        <input type="submit" class="btn btn-primary" style="margin-left: 10px;" value="查询">
+    </form>
+    <form method="post" class="js-ajax-form" action="{:url('listOrder')}">
+        <div class="table-actions">
+            <button class="btn btn-primary  js-ajax-submit" type="submit">{:lang('SORT')}</button>
+        </div>
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>排序</th>
+                <th>所属游戏</th>
+                <th>A战队</th>
+                <th>B战队</th>
+                <th>开赛时间</th>
+                <th>直播地址</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="lists" item="vo">
+                <tr>
+                    <td>
+                        <input name="list_orders[{$vo.id}]" class="input-order" type="text" value="{$vo.sort}">
+                    </td>
+                    <td>{$match_class[$vo['type']]} </td>
+                    <td><img style="max-width: 40px;max-height: 40px;" src="{$vo['home_icon']}" alt="">&nbsp;&nbsp;{$vo['home_team']}</td>
+                    <td><img style="max-width: 40px;max-height: 40px;" src="{$vo['away_icon']}" alt="">&nbsp;&nbsp;{$vo['away_team']}</td>
+                    <td>
+                        {$vo.start_time|date="Y-m-d H:i:s"}
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-info liveurl"  data-url="{$vo['view_url']}">直播链接</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" href='{:url("edit",array("id"=>$vo["id"]))}'>{:lang('EDIT')}</a>
+                        <a href="{:url('delete',array('id'=>$vo['id']))}" class="js-ajax-delete">删除</a>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    $(function(){
+        Wind.use('layer');
+        $('.liveurl').click(function(){
+            var _this=$(this);
+            var url=_this.data('url');
+
+            var lives = layer.open({
+                type: 2,
+                title: '直播流',
+                shade: 0.5,
+                area: ['500px', '490px'],
+                content: url,
+                closeBtn: 1, //不显示关闭按钮
+                btn: ['关闭']
+            });
+            layer.full(lives);
+        });
+    })
+</script>
+</body>
+</html>

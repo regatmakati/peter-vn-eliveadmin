@@ -1,0 +1,99 @@
+
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li ><a href="{:url('Liveing/teidanmgt')}">推单管理</a></li>
+			<li class="active"><a >{:lang('EDIT')}</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('Liveing/teidaneditPost')}">
+			<input type="hidden" id="id" name="id" value="{$data['id']}"/>
+
+            <div class="form-group">
+				<label for="input-liveuid" class="col-sm-2 control-label"><span class="form-required">*</span>选择直播间</label>
+				<div class="col-md-6 col-sm-10">
+                    <select class="form-control" name="liveuid">
+                    	<option value="0">--请选择--</option>
+                        <volist name="livelist" id="v">
+                        <option value="{$v['uid']}" <if condition="$data['liveuid'] eq $v['uid']">selected</if>>【{$v['user_nicename']}】- {$v['title']}</option>
+                        </volist>
+                    </select>
+				</div>
+			</div> 
+			
+            <div class="form-group">
+				<label for="input-type" class="col-sm-2 control-label"><span class="form-required">*</span>推单类型</label>
+				<div class="col-md-6 col-sm-10">
+                    <select class="form-control" name="type">
+                    	<option value="0" <eq name="data['type']" value="0">selected</eq>>--请选择--</option>
+                        <volist name="type" id="v">
+                        <option value="{$key}" <if condition="$data['type'] eq $key">selected</if>>{$v}</option>
+                        </volist>
+                    </select>
+				</div>
+			</div>            
+           
+            <div class="form-group">
+				<label for="input-title" class="col-sm-2 control-label"><span class="form-required">*</span>推单描述</label>
+				<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-title" name="title" value="{$data['title']}"/>
+				</div>
+			</div>            
+
+            <div class="form-group">
+				<label for="input-buy" class="col-sm-2 control-label"><span class="form-required">*</span>跟单数</label>
+				<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-buy" name="buy" value="{$data['buy']}"/>
+				</div>
+			</div>   
+
+            <div class="form-group">
+				<label for="input-oppositebuy" class="col-sm-2 control-label"><span class="form-required">*</span>反买数</label>
+				<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-oppositebuy" name="oppositebuy" value="{$data['oppositebuy']}"/>
+				</div>
+			</div>   
+			
+            <div class="form-group">
+				<label for="input-status" class="col-sm-2 control-label"><span class="form-required">*</span>推单状态</label>
+				<div class="col-md-6 col-sm-10">
+                    <select class="form-control" name="status">
+                    	<option value="0" <eq name="data['status']" value="0">selected</eq>>--请选择--</option>
+                        <volist name="status" id="v">
+                        <option value="{$key}" <if condition="$data['status'] eq $key">selected</if>>{$v}</option>
+                        </volist>
+                    </select>
+				</div>
+			</div>
+            
+            <div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('EDIT')}</button>
+					<a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+    <script type="text/javascript">
+    (function(){
+		$('.btn-cancel-thumbnail').click(function () {
+			$('#thumbnail-preview').attr('src', '__TMPL__/public/assets/images/default-thumbnail.png');
+			$('#thumbnail').val('');
+		});
+		$("#cdn").on('change',function(){
+			var v=$(this).val();
+			var b=$("#cdn_switch_1");
+			if(v==0){
+				b.hide();
+				$("#input-type_val").val('');
+			}else{
+				b.show();
+			}
+		})
+	})()
+    </script>
+</body>
+</html>

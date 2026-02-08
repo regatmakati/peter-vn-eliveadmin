@@ -1,0 +1,117 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:url('watermark/index')}">{:lang('ADMIN_WATERMARK_INDEX')}</a></li>
+			<li class="active"><a href="{:url('watermark/add')}">{:lang('ADMIN_WATERMARK_ADD')}</a></li>
+		</ul>
+		<php>$position=array("1"=>"上左遮罩","2"=>"上右遮罩","3"=>"下左遮罩","4"=>"下右遮罩");</php>
+		<php>$device=array("1"=>"PC","2"=>"APP/H5");</php>
+		<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('watermark/addPost')}">
+			<div class="form-group">
+				<label for="input-name" class="col-sm-2 control-label">水印名称<span class="form-required">*</span></label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="input-name" name="name">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="input-image" class="col-sm-2 control-label">图片<span class="form-required">*</span></label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="input-image" name="image">
+					<a href="javascript:uploadOneImage('图片上传','#input-image','','watermark');">上传图片</a>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="input-device" class="col-sm-2 control-label">设备</label>
+				<div class="col-md-6 col-sm-10">
+					<select class="form-control" name="device" id="input-device">
+						<foreach name="device" item="vo">
+							<option value="{$key}">{$vo}</option>
+						</foreach>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="input-position" class="col-sm-2 control-label">水印位置</label>
+				<div class="col-md-6 col-sm-10">
+					<select class="form-control" name="position" id="input-position">
+						<foreach name="position" item="vo">
+							<option value="{$key}">{$vo}</option>
+						</foreach>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="input-xpos" class="col-sm-2 control-label">显示位置x轴方向<span class="form-required">*</span></label>
+				<div class="col-md-3 col-sm-10">
+					<button type="button" class="minus" style="display:inline;">-</button>
+					<input type="number" style="display:inline;width: 50%;" class="form-control" id="input-xpos" value="0" name="xpos">
+					<button type="button" class="add" style="display:inline;">+</button>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="input-ypos" class="col-sm-2 control-label">显示位置y轴方向<span class="form-required">*</span></label>
+				<div class="col-md-3 col-sm-10">
+					<button type="button" class="minus" style="display:inline;">-</button>
+					<input type="number" style="display:inline;width: 50%;"  class="form-control" id="input-ypos" value="0" name="ypos">
+					<button type="button" class="add" style="display:inline;">+</button>
+				</div>
+			</div>
+			<div class="form-group" style="width: 858px;height: 490px;background: grey;">
+                <img src=""
+					 id="input-image-preview"
+					 style="cursor: pointer;"/>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<input type="hidden" id="width" name="width" value=""/>
+					<input type="hidden" id="height" name="height" value=""/>
+					<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+					<a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+<script>
+	$('.add').click(function(){
+		var val = Number($(this).prev().val());
+		newval = val+1;
+		$(this).prev().val(newval);
+		$(this).prev().change();
+	})
+	$('.minus').click(function () {
+		var val = Number($(this).next().val());
+		newval = val-1;
+		$(this).next().val(newval);
+		$(this).next().change();
+	})
+	$('#input-xpos').on('input change',function(){
+		x = $(this).val()+"%"
+		console.log(x)
+		$("#input-image-preview").css({"margin-left":x});
+		console.log(x)
+	})
+	$('#input-ypos').on('input change',function(){
+        y = $(this).val();
+        y = $(this).val()*490/858;
+        y = y+"%"
+		console.log(y)
+		$("#input-image-preview").css({"margin-top":y});
+		console.log(y)
+	})
+	$('#input-image-preview').load(function(){
+		w = $(this).width();
+		width = Math.floor(w/858*100);
+		$('#width').val(width)
+		console.log(height)
+		h = $(this).height();
+		height = Math.floor(h/858*100);
+		console.log(height)
+		$('#height').val(height)
+	})
+</script>
+</body>
+</html>

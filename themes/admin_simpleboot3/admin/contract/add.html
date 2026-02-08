@@ -1,0 +1,157 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a >{:lang('ADD')}</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('contract/addPost')}">
+
+            <div class="form-group" style="display: none">
+				<label for="input-uid" class="col-sm-2 control-label"><span class="form-required">*</span>用户ID</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="input-uid" name="uid" value="{$uid|default=''}">
+				</div>
+			</div>
+<!--            <div class="form-group">-->
+<!--				<label for="input-type" class="col-sm-2 control-label"><span class="form-required">*</span>类型</label>-->
+<!--				<div class="col-md-6 col-sm-10">-->
+<!--					<select class="form-control" name="type">-->
+<!--						<volist name="types" id="v">-->
+<!--							<option value="{$key}" >{$v}</option>-->
+<!--						</volist>-->
+<!--					</select>-->
+<!--				</div>-->
+<!--			</div>-->
+			<div class="form-group">
+				<label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>QQ</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="input-contract" name="qq[]" value="{$qq[0]['contract']|default=''}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>显示状态</label>
+				<div class="col-md-6 col-sm-10">
+					<present name="qq[0]">
+						<label>
+							<input type="radio" name="status[0]" value="0" <eq name="qq[0]['status']" value="0">checked</eq> >隐藏全部</label>
+						<label>
+							<input type="radio" name="status[0]" value="1" <eq name="qq[0]['status']" value="1">checked</eq> >显示全部</label>
+						<label>
+							<input type="radio" name="status[0]" value="2" <eq name="qq[0]['status']" value="2">checked</eq> >显示复制按钮</label>
+
+						<else />
+						<label>
+							<input type="radio" name="status[0]" value="0" checked >隐藏全部</label>
+						<label>
+							<input type="radio" name="status[0]" value="1" >显示全部</label>
+						<label>
+							<input type="radio" name="status[0]" value="2" >显示复制按钮</label>
+					</present>
+
+				</div>
+			</div>
+            <div class="form-group">
+                <label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>QQ</label>
+                <div class="col-md-6 col-sm-10">
+                    <input type="text" class="form-control" id="input-contract" name="qq[]"  value="{$qq[1]['contract']|default=''}">
+                </div>
+            </div>
+			<div class="form-group">
+				<label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>显示状态</label>
+				<div class="col-md-6 col-sm-10">
+					<label>
+					<present name="qq[1]">
+						<input type="radio" name="status[1]" value="0" <eq name="qq[1]['status']" value="0">checked</eq>  >隐藏全部</label>
+					<label>
+						<input type="radio" name="status[1]" value="1" <eq name="qq[1]['status']" value="1">checked</eq> >显示全部</label>
+					<label>
+						<input type="radio" name="status[1]" value="2" <eq name="qq[1]['status']" value="2">checked</eq> >显示复制按钮</label>
+					<else />
+					<label>
+						<input type="radio" name="status[1]" value="0" checked >隐藏全部</label>
+					<label>
+						<input type="radio" name="status[1]" value="1" >显示全部</label>
+					<label>
+						<input type="radio" name="status[1]" value="2" >显示复制按钮</label>
+					</present>
+				</div>
+			</div>
+            <div class="form-group">
+                <label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>微信</label>
+                <div class="col-md-6 col-sm-10">
+                    <input type="text" class="form-control" id="input-contract" name="wechat[]"  value="{$wechat[0]['contract']|default=''}">
+                </div>
+            </div>
+			<div class="form-group">
+				<label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>显示状态</label>
+				<div class="col-md-6 col-sm-10">
+					<present name="wechat[0]">
+					<label>
+						<input type="radio" name="wechatStatus[0]" value="0" <eq name="wechat[0]['status']" value="0">checked</eq>  >隐藏全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[0]" value="1" <eq name="wechat[0]['status']" value="1">checked</eq> >显示全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[0]" value="2" <eq name="wechat[0]['status']" value="2">checked</eq> >显示复制按钮</label>
+					<else />
+					<label>
+						<input type="radio" name="wechatStatus[0]" value="0" checked >隐藏全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[0]" value="1"  >显示全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[0]" value="2"  >显示复制按钮</label>
+					</present>
+				</div>
+			</div>
+            <div class="form-group">
+                <label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>微信</label>
+                <div class="col-md-6 col-sm-10">
+                    <input type="text" class="form-control" id="input-contract" name="wechat[]"  value="{$wechat[1]['contract']|default=''}">
+                </div>
+            </div>
+			<div class="form-group">
+				<label for="input-reason" class="col-sm-2 control-label"><span class="form-required"></span>显示状态</label>
+				<div class="col-md-6 col-sm-10">
+					<present name="wechat[1]">
+					<label>
+						<input type="radio" name="wechatStatus[1]" value="0" <eq name="wechat[1]['status']" value="0">checked</eq>  >隐藏全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[1]" value="1" <eq name="wechat[1]['status']" value="1">checked</eq> >显示全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[1]" value="2" <eq name="wechat[1]['status']" value="2">checked</eq> >显示复制按钮</label>
+					<else />
+					<label>
+						<input type="radio" name="wechatStatus[1]" value="0" checked >隐藏全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[1]" value="1"  >显示全部</label>
+					<label>
+						<input type="radio" name="wechatStatus[1]" value="2"  >显示复制按钮</label>
+					</present>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary js-ajax-submit">保存</button>
+					<a class="btn btn-default" href="{:url('liveing/index')}">{:lang('BACK')}</a>
+				</div>
+			</div>
+            
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+    <script>
+	(function(){
+		$("#cdn").on('change',function(){
+			var v=$(this).val();
+			var b=$("#cdn_switch_1");
+			if(v==0){
+				b.hide();
+				$("#input-type_val").val('');
+			}else{
+				b.show();
+			}
+		})
+	})()
+	</script>
+</body>
+</html>

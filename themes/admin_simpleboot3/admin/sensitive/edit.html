@@ -1,0 +1,28 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('sensitive/index')}">{:lang('ADMIN_SENSITIVE_INDEX')}</a></li>
+        <li><a href="{:url('sensitive/add')}">{:lang('ADMIN_SENSITIVE_ADD')}</a></li>
+        <li class="active"><a>编辑敏感词</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('sensitive/editPost')}">
+        <div class="form-group">
+            <label for="input-sensitive_name" class="col-sm-2 control-label">关键词<span class="form-required">*</span></label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" id="input-sensitive_name" name="name" value="{$sensitive.name}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="id" value="{$sensitive.id}">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+                <a class="btn btn-default" href="{:url('sensitive/index')}">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('sensitive/index')}">所有敏感词</a></li>
+        <li><a href="{:url('sensitive/add')}">添加敏感词</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" name="form1" method="post" action="{:url('Sensitive/index')}">
+        关键字：
+        <input class="form-control" type="text" name="name" style="width: 200px;" value="{:input('request.name')}"
+               placeholder="请输入关键字">
+
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+    </form>
+    <form method="post" class="js-ajax-form margin-top-20" action="{:url('Sensitive/listOrder')}">
+
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th >关键词</th>
+                <th >创建时间</th>
+                <th >{:lang('ACTIONS')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="sensitives" item="vo">
+                <tr>
+                    <td>{$vo.name}</td>
+                    <td>{:date("Y-m-d H:i:s",$vo.addtime)}</td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" href="{:url('sensitive/edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
+                        <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('sensitive/delete',array('id'=>$vo['id']))}" >
+                            {:lang('DELETE')}
+                        </a>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+
+        </table>
+        <div class="pagination">{$page}</div>
+
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

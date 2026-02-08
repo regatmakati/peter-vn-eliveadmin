@@ -1,0 +1,95 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a >直播列表</a></li>
+			<li><a href="{:url('Liveing/add')}">{:lang('ADD')}</a></li>
+		</ul>
+		
+		<form class="well form-inline margin-top-20" method="post" action="{:url('Liveing/index')}">
+			时间：
+			<input class="form-control js-bootstrap-date" name="start_time" id="start_time" value="{:input('request.start_time')}" aria-invalid="false" style="width: 110px;"> - 
+            <input class="form-control js-bootstrap-date" name="end_time" id="end_time" value="{:input('request.end_time')}" aria-invalid="false" style="width: 110px;">
+			关键字：
+            <input class="form-control" type="text" name="uid" style="width: 200px;" value="{:input('request.uid')}"
+                   placeholder="请输入会员ID、靓号">
+			<input type="submit" class="btn btn-primary" value="搜索">
+		</form>		
+		<form method="post" class="js-ajax-form" action="{:url('Liveing/listOrder')}">
+
+			<div class="table-actions">
+				<button class="btn btn-primary  js-ajax-submit" type="submit">{:lang('SORT')}</button>
+			</div>
+
+			<table class="table table-hover table-bordered">
+				<thead>
+					<tr>
+						<th>会员ID</th>
+						<th>会员昵称</th>
+						<th>直播ID</th>
+						<th>直播开始时间</th>
+						<th>直播分类</th>
+						<th>房间类型</th>
+						<th>视频类型</th>
+						<th>在线总人数</th>
+						<th>PC</th>
+						<th>H5</th>
+						<th>安卓</th>
+						<th>IOS</th>
+						<th>累计人数</th>
+						<th>播流地址</th>
+						<th>推荐排序</th>
+						<th>设备信息</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<foreach name="lists" item="vo">
+					<tr>
+						<td>{$vo.uid}</td>					
+						<td>{$vo['userinfo']['user_nicename']} </td>
+						<td>{$vo['showid']}</td>
+						<td>{:date('Y-m-d H:i',$vo['starttime'])}</td>
+						<td>{$liveclass[$vo['liveclassid']]}</td>
+						<td>{$type[$vo['type']]}</td>
+						<td><if condition="$vo['anyway'] eq 0">竖屏<else/>横屏</if></td>
+						<td>{$vo['allnums']}</td>
+						<td>{$vo['pcnums']}</td>
+						<td>{$vo['h5nums']}</td>
+						<td>{$vo['androidnums']}</td>
+						<td>{$vo['iosnums']}</td>
+						<td>{$vo['nums']}</td>
+                        <td>{$vo.pull|mb_substr=0,50}<label onclick="alert('{$vo.pull}');">...</label></td>
+						<td><input name="recom_sorts[{$vo.uid}]" class="input-order" type="text"  value="{$vo.recom_sort}"></td>
+                        <td>{$vo['deviceinfo']}</td>
+						<td>
+                            <if condition="$vo['isvideo']==1">
+                            <a class="btn btn-xs btn-primary" href='{:url("Liveing/edit",array("uid"=>$vo["uid"]))}'>{:lang('EDIT')}</a>
+							<a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('Liveing/del',array('uid'=>$vo['uid']))}">{:lang('DELETE')}</a>
+                            </if>
+							<a  class="btn btn-xs btn-primary" href='{:url("contract/add",array("uid"=>$vo["uid"]))}'>添加联系</a>
+							<a  class="btn btn-xs btn-primary" href='{:url("Liveing/openChat",array("uid"=>$vo["uid"]))}'>开启聊天室</a>
+							<a  class="btn btn-xs btn-primary" href='{:url("Liveing/closeChat",array("uid"=>$vo["uid"]))}'>关闭聊天室</a>
+							<if condition="$vo['is_gift_off']==1">
+							<a  class="btn btn-xs btn-primary" href='{:url("Liveing/openGift",array("uid"=>$vo["uid"]))}'>开启礼物</a>
+							<else />
+							<a  class="btn btn-xs btn-primary" href='{:url("Liveing/closeGift",array("uid"=>$vo["uid"]))}'>关闭礼物</a>
+							</if>
+							<if condition="$vo['is_fold_off']==1 or $vo['is_fold_off']==2">
+							<a  class="btn btn-xs btn-primary" href='{:url("Liveing/openFold",array("uid"=>$vo["uid"]))}'>开启聊天信息折叠</a>
+							<else />
+							<a  class="btn btn-xs btn-primary" href='{:url("Liveing/closeFold",array("uid"=>$vo["uid"]))}'>关闭聊天信息折叠</a>
+							</if>							
+						</td>
+					</tr>
+					</foreach>
+				</tbody>
+			</table>
+			<div class="pagination">{$page}</div>
+
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

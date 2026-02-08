@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket聊天室</title>
+</head>
+<body>
+<div id="main" style="width:600px;height: 200px; overflow: auto;border: solid 2px black;">
+</div>
+<textarea id="textarea"></textarea>
+<br/>
+<input type="button" value="发送数据" onclick="send()">
+<input type="button" value="直播下线推送" onclick="offlive()">
+<input type="button" value="关闭连接" onclick="closeWs()">
+<input type="button" value="心跳测试" onclick="heartbeat()">
+<input type="button" value="禁言通知" onclick="shutUpNotice()">
+<input type="button" value="设为管理员通知" onclick="setManagerNotice()">
+<input type="button" value="聊天室清屏" onclick="cleanScreen()">
+
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    var name =prompt("请输入您的昵称","匿名者"); //弹出input框
+    var uid =prompt("请输入uid", 1); //弹出input框
+    var liveuid =prompt("请输入liveid", 1); //弹出input框
+    // 打开一个 web socket
+
+
+    var data_str='{"type":"init","msg":{"uid":"'+uid+'","liveuid":"'+liveuid+'","livetype":"live","send":""}}';
+    // var ws = new WebSocket("ws://124.71.10.194:9511");
+    // var ws = new WebSocket("ws://192.168.137.137:9511");
+    // var ws = new WebSocket("ws://chatsocket.zbitcloud.com");
+    // var ws = new WebSocket("wss://chatsocket.shoutea.com");
+    // var ws = new WebSocket("wss://chatsocket.gyytgg.com");
+    // var ws = new WebSocket("wss://chatsocket.niubanj.com");
+    // var ws = new WebSocket("wss://chatsocket.lcszgt.com");
+    // var ws = new WebSocket("wss://chatsocket.gaweishi.com");
+    var ws = new WebSocket("wss://mschatsocket.tsguiju.cn");
+
+
+    ws.onopen = function() {
+        console.log("连接成功");
+        ws.send(data_str);
+    };
+
+    //收到消息 触发回调
+    ws.onmessage = function (evt) {
+        var data = evt.data;
+        console.log("收到socket服务消息，内容：" + data);
+        $('#main').append("<p>" + data + "</p>");
+    };
+
+    function send() {
+        var data = document.getElementById('textarea').value;
+        var send_str='{"type":"sendMsg","msg":{"uid":"'+uid+'","liveuid":"'+liveuid+'","livetype":"live","send":"'+data+'"}}';
+        console.log(send_str);
+        ws.send(send_str);
+    }
+
+    function offlive() {
+        var token= '55ceecf78243f369ee7b29e36ebb9210';
+        var send_str2='{"type":"endLive","msg":{"uid":"'+uid+'","liveuid":"'+liveuid+'","livetype":"live","token":"'+token+'"}}';
+        console.log(send_str2);
+        ws.send(send_str2);
+    }
+    function closeWs()
+    {
+        ws.close();
+        console.log('连接已关闭');
+    }
+
+    function heartbeat()
+    {
+        var send_str='{"type":"heartbeat"}';
+        console.log(send_str);
+        ws.send(send_str);
+    }
+    function shutUpNotice()
+    {
+        var send_str='{"secretKey":"f7s8v8bnm9ad54c5badda7d6304r0higfuad","type":"shutUpNotice","msg":{"touid":"'+uid+'","liveuid":"'+liveuid+'","tousername":"大赢家"}}';
+        console.log(send_str);
+        ws.send(send_str);
+    }
+    function setManagerNotice()
+    {
+        var send_str='{"type":"setManagerNotice","msg":{"touid":"'+uid+'","liveuid":"'+liveuid+'","tousername":"大赢家"}}';
+        console.log(send_str);
+        ws.send(send_str);
+    }
+
+    function cleanScreen()
+    {
+        var send_str='{"type":"cleanScreen","msg":{"uid":"'+uid+'","liveuid":"'+liveuid+'","token":"xxx"}}';
+        console.log(send_str);
+        ws.send(send_str);
+    }
+    ws.onclose = function() {
+        // 关闭 websocket
+        console.log("连接已关闭...");
+    };
+</script>
+</body>
+</html>

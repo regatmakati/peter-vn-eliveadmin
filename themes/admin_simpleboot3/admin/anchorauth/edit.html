@@ -1,0 +1,70 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap">
+	<ul class="nav nav-tabs">
+		<li ><a href="{:url('Anchorauth/index')}">主播授权</a></li>
+		<li class="active"><a >{:lang('EDIT')}</a></li>
+	</ul>
+
+	<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('Anchorauth/editPost')}">
+
+		<div class="form-group">
+			<label for="input-uid" class="col-sm-2 control-label"><span class="form-required">*</span>用户ID</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-uid" name="uid" value="{$data.uid}" readonly>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="input-type" class="col-sm-2 control-label"><span class="form-required">*</span>授权状态</label>
+			<div class="col-md-6 col-sm-10">
+				<select class="form-control" name="status">
+					<option value="">请选择</option>
+					<option value="1" <if condition="$data['status'] eq 1">selected</if>>正常</option>
+					<option value="0" <if condition="$data['status'] eq 0">selected</if>>禁用</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="input-subscribenum" class="col-sm-2 control-label"><span class="form-required">*</span>默认主播订阅数</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-subscribenum" name="subscribenum" value="{$data.subscribenum}"/>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="input-viewnum" class="col-sm-2 control-label"><span class="form-required">*</span>默认主播热度</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-viewnum" name="viewnum" value="{$data.viewnum}"/>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<input type="hidden" name="id" value="{$data.id}">
+				<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('EDIT')}</button>
+				<a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+			</div>
+		</div>
+
+
+	</form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+	(function(){
+		$("#cdn").on('change',function(){
+			var v=$(this).val();
+			var b=$("#cdn_switch_1");
+			if(v==0){
+				b.hide();
+				$("#input-type_val").val('');
+			}else{
+				b.show();
+			}
+		})
+	})()
+</script>
+</body>
+</html>

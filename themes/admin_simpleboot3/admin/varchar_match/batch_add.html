@@ -1,0 +1,223 @@
+<include file="public@header" />
+</head>
+<style>
+    .match {}
+    .match input,.match select,.match button {outline:none;}
+    .match table {width:100%;font-size:14px;border:1px solid #ecf0f1;}
+    .match table thead tr th,.match table tbody tr td div {padding:8px;color:#2C3E50;box-sizing:border-box;}
+    .match table tbody tr td div,.match .caozuo {display:flex;align-items:center;justify-content:center;}
+    .match table thead tr th {white-space:nowrap;border-bottom:2px solid #ecf0f1;}
+    .match table thead tr th:not(:first-child),.match table tbody tr td:not(:first-child) {border-left:1px solid #ecf0f1;}
+    .match table tbody tr td input {width:100%;min-width:50px;height:24px;line-height:24px;text-align:center;border:1px solid #b3c8cd;}
+    .match table tbody tr td select,.match table tbody tr td select option {width:100%;height:24px;padding-left:8px;box-sizing:border-box;border:1px solid #b3c8cd;}
+    .match table tbody tr td select option {line-height:24px;}
+    .match table tbody tr td {text-align:center;}
+    .match table tbody tr td button {white-space:nowrap;}
+    .match .caozuo button {color:#fff;padding:4px 8px;cursor:pointer;border:none;border-color:#E74C3C;background-color:#E74C3C;}
+    .match .add-match {margin-top:14px;}
+    .match .add-match button {padding:6px 12px;border:none;cursor:pointer;}
+    .match .submite {margin:24px auto 0;width:150px;height:40px;line-height:40px;text-align:center;color:#fff;cursor:pointer;border-radius:4px;background-color:#52b6d9;}
+    .match .nodata {width:100%;padding:50px;text-align:center;box-sizing:border-box;}
+    .match-body tr td{padding: 5px;}
+</style>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs">
+            <li><a href="{:url('index')}">比赛列表</a></li>
+            <li><a href="{:url('add')}">{:lang('ADD')}</a></li>
+            <li class="active"><a>批量添加</a></li>
+        </ul>
+    </ul>
+    <form method="post" class="match js-ajax-form margin-top-20" action="">
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 10%;">球队类型</th>
+                <th style="width: 8%;">封面图</th>
+                <th style="width: 8%;">联赛名称</th>
+                <th style="width: 8%;">A战队</th>
+                <th style="width: 8%;">A战队图片</th>
+                <th style="width: 8%;">B战队</th>
+                <th style="width: 8%;">B战队图片</th>
+                <th style="width: 15%;">比赛时间</th>
+				<th style="width: 15%;">结束时间</th>
+                <th style="width: 18%;">直播地址</th>
+                <th style="width: 18%;">是否热门</th>
+                <th style="width: 18%;">是否推荐</th>
+                <th style="width: 8%;">状态</th>
+                <th style="width: 8%;">操作</th>
+            </tr>
+            </thead>
+            <tbody id="match-body">
+            <tr>
+                <td style="padding: 5px">
+                    <select style="height: 40px;width: 80px;" class="form-control" name="data[0][type]">
+                        <option value="0">----选择球队类型---</option>
+                        <volist name="match_class" id="v">
+                            <option value="{$key}" <if condition="$key eq 1">selected</if>>{$v}</option>
+                        </volist>
+                    </select>
+                </td>
+                <td style="padding: 5px">
+                    <input style="height: 40px" type="hidden" name="data[0][thumb]" id="thumb" value="">
+                    <a href="javascript:uploadOneImage('图片上传','#thumb','','liveclass');">
+                        <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="thumb-preview" style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                    </a>
+                </td>
+
+                <td style="padding: 5px">
+                    <input style="height: 40px" type="text" class="form-control" name="data[0][name]" value="">
+                </td>
+                <td style="padding: 5px">
+                    <input style="height: 40px" type="text" class="form-control" name="data[0][home_team]" value="">
+                </td>
+                <td style="padding: 5px">
+                    <input style="height: 40px" type="hidden" name="data[0][home_icon]" id="thumbnail_0" value="">
+                    <a href="javascript:uploadOneImage('图片上传','#thumbnail_0','','liveclass');">
+                        <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="thumbnail_0-preview" style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                    </a>
+                </td>
+                <td style="padding: 5px">
+                    <input style="height: 40px" type="text" class="form-control" name="data[0][away_team]" value="">
+                </td>
+                <td style="padding: 5px">
+                    <input style="height: 40px" type="hidden" name="data[0][away_icon]" id="thumbnailB_0" value="">
+                    <a href="javascript:uploadOneImage('图片上传','#thumbnailB_0','','liveclass');">
+                        <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="thumbnailB_0-preview"style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                    </a>
+                </td>
+                <td>
+                    <input style="height: 40px;width: 150px;" readonly class="form-control js-bootstrap-datetime" name="data[0][start_time]" value="{:date('Y-m-d H:i:s')}">
+                </td>
+                <td>
+                    <input style="height: 40px;width: 150px;" readonly class="form-control js-bootstrap-datetime" name="data[0][end_time]" value="">
+                </td>
+                <td style="padding: 5px">
+                    <input style="height: 40px;width: 150px;" type="text" placeholder="直播地址必填" class="form-control J_view_url" name="data[0][view_url]" value="">
+                </td>
+                <td style="padding: 5px">
+                    <select style="width: 60px;height: 40px" class="form-control" name="data[0][hot_status]">
+                        <option value="1">是</option>
+                        <option value="0" <eq name="status" value="0">selected</eq>>否</option>
+                    </select>
+                </td>
+                <td style="padding: 5px">
+                    <select style="width: 60px;height: 40px" class="form-control" name="data[0][rocm_status]">
+                        <option value="1">是</option>
+                        <option value="0" <eq name="status" value="0">selected</eq>>否</option>
+                    </select>
+                </td>
+                <td style="padding: 5px">
+                    <select style="width: 100px;height: 40px" class="form-control" name="data[0][status]">
+                        <option value="0">未开始/进行中</option>
+                        <option value="1" <eq name="status" value="1">selected</eq>>已结束</option>
+                    </select>
+                </td>
+                <td class="J_click_del" style="padding: 5px">
+                    删除
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="add-match">
+            <button type="button" id="add-match">添加比赛栏</button>
+        </div>
+        <div class="add-match">
+            <button style="padding:0" id="pileiang" class="submite btn btn-primary js-ajax-submit">批量添加</button>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+$('#add-match').on('click', function(){
+    var lenths = $('#match-body tr').length;
+    lenths = lenths + 1;
+    var info = '<tr>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <select style="height: 40px;width: 80px;" class="form-control" name="data['+lenths+'][type]">\n' +
+        '                        <option value="0">----选择球队类型---</option>\n' +
+        '                        <volist name="match_class" id="v">\n' +
+        '                            <option value="{$key}" <eq name="key" value="1">selected</eq>>{$v}</option>\n' +
+        '                        </volist>\n' +
+        '                    </select>\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                     <input style="height: 40px" type="hidden" name="data['+lenths+'][thumb]" id="thumb_'+lenths+'" value="">\n' +
+        '                         <a href="javascript:uploadOneImage(\'图片上传\',\'#thumb_'+lenths+'\',\'\',\'liveclass\');">\n' +
+        '                            <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="thumb_'+lenths+'-preview" style="cursor: pointer;max-width:100px;max-height:100px;"/>\n' +
+        '                       </a>\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <input style="height: 40px" type="text" class="form-control" name="data['+lenths+'][name]" value="">\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <input style="height: 40px" type="text" class="form-control" name="data['+lenths+'][home_team]" value="">\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <input style="height: 40px" type="hidden" name="data['+lenths+'][home_icon]" id="thumbnail_'+lenths+'" value="">\n' +
+        '                    <a href="javascript:uploadOneImage(\'图片上传\',\'#thumbnail_'+lenths+'\',\'\',\'liveclass\');">\n' +
+        '                        <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="thumbnail_'+lenths+'-preview" style="cursor: pointer;max-width:100px;max-height:100px;"/>\n' +
+        '                    </a>\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <input style="height: 40px" type="text" class="form-control" name="data['+lenths+'][away_team]" value="">\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <input style="height: 40px" type="hidden" name="data['+lenths+'][away_icon]" id="thumbnailB_'+lenths+'" value="">\n' +
+        '                    <a href="javascript:uploadOneImage(\'图片上传\',\'#thumbnailB_'+lenths+'\',\'\',\'liveclass\');">\n' +
+        '                        <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="thumbnailB_'+lenths+'-preview"style="cursor: pointer;max-width:100px;max-height:100px;"/>\n' +
+        '                    </a>\n' +
+        '                </td>\n' +
+        '                <td>\n' +
+        '                    <input style="height: 40px;width: 150px;" readonly class="form-control js-bootstrap-datetime_'+lenths+'" name="data['+lenths+'][start_time]" value="{:date(\'Y-m-d H:i:s\')}">\n' +
+        '                </td>\n' +
+        '                <td>\n' +
+        '                    <input style="height: 40px;width: 150px;" readonly class="form-control js-bootstrap-datetime_'+lenths+'" name="data['+lenths+'][end_time]" value="">\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <input style="height: 40px;width: 150px;" type="text" placeholder="直播地址必填" class="form-control J_view_url" name="data['+lenths+'][view_url]" value="">\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <select style="width: 60px;height: 40px" class="form-control" name="data['+lenths+'][hot_status]">\n' +
+        '                        <option value="1">是</option>\n' +
+        '                        <option value="0" <eq name="status" value="0">selected</eq>>否</option>\n' +
+        '                    </select>\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <select style="width: 60px;height: 40px" class="form-control" name="data['+lenths+'][rocm_status]">\n' +
+        '                        <option value="1">是</option>\n' +
+        '                        <option value="0" <eq name="status" value="0">selected</eq>>否</option>\n' +
+        '                    </select>\n' +
+        '                </td>\n' +
+        '                <td style="padding: 5px">\n' +
+        '                    <select style="width: 100px;height: 40px" class="form-control" name="data['+lenths+'][status]">\n' +
+        '                        <option value="0">未开始/进行中</option>\n' +
+        '                        <option value="1" <eq name="status" value="1">selected</eq>>已结束</option>\n' +
+        '                    </select>\n' +
+        '                </td>\n' +
+        '                <td class="J_click_del" style="padding: 5px">\n' +
+        '                    删除\n' +
+        '                </td>\n' +
+        '            </tr>';
+    $('#match-body').append(info);
+    var bootstrapDateTimeInput = $(".js-bootstrap-datetime_" + lenths);
+    if (bootstrapDateTimeInput.length) {
+        Wind.css('bootstrapDatetimePicker');
+        Wind.use('bootstrapDatetimePicker', function () {
+            bootstrapDateTimeInput.datetimepicker({
+                language: 'zh-CN',
+                format: 'yyyy-mm-dd hh:ii',
+                todayBtn: 1,
+                autoclose: true
+            });
+        });
+    }
+})
+
+$(document).on("click", ".J_click_del", function(){
+    $(this).closest('tr').remove();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('avatar/index')}">{:lang('ADMIN_AVATAR_INDEX')}</a></li>
+        <li><a href="{:url('avatar/add')}">添加随机头像</a></li>
+        <li class="active"><a>编辑随机头像</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('avatar/editPost')}">
+        <div class="form-group">
+            <label for="input-user_login" class="col-sm-2 control-label"><span class="form-required">*</span>图片</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="hidden" name="image" id="thumbnail" value="{$avatar['image']}">
+                <a href="javascript:uploadOneImage('图片上传','#thumbnail','','avatar');">
+                    <if condition="empty($avatar.image)">
+                        <img src="__TMPL__/public/assets/images/default-thumbnail.png"
+                             id="thumbnail-preview"
+                             style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                        <else/>
+                        <img src="{:cmf_get_image_preview_url($avatar.image)}"
+                             id="thumbnail-preview"
+                             style="cursor: pointer;max-width:100px;max-height:100px;"/>
+                    </if>
+                </a>
+                <input type="button" class="btn btn-sm btn-cancel-thumbnail" value="取消图片">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="id" value="{$avatar.id}">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+                <a class="btn btn-default" href="{:url('avatar/index')}">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    $('.btn-cancel-thumbnail').click(function () {
+        $('#thumbnail-preview').attr('src', '__TMPL__/public/assets/images/default-thumbnail.png');
+        $('#thumbnail').val('');
+    });
+</script>
+</body>
+</html>

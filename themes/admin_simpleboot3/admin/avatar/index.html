@@ -1,0 +1,42 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('avatar/index')}">所有随机头像</a></li>
+        <li><a href="{:url('avatar/add')}">添加随机头像</a></li>
+    </ul>
+
+    <form method="post" class="js-ajax-form margin-top-20" action="{:url('Avatar/listOrder')}">
+
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th >头像</th>
+                <th >创建时间</th>
+                <th >{:lang('ACTIONS')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="avatars" item="vo">
+                <tr>
+                    <td><img width="25" height="25" class="imgtip" src="{$vo['image']}" /></td>
+                    <td>{:date("Y-m-d H:i:s",$vo.addtime)}</td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" href="{:url('avatar/edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
+                        <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('avatar/delete',array('id'=>$vo['id']))}" >
+                            {:lang('DELETE')}
+                        </a>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+
+        </table>
+        <div class="pagination">{$page}</div>
+
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
