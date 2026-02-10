@@ -3,8 +3,8 @@
 <body>
 	<div class="wrap">
 		<ul class="nav nav-tabs">
-			<li><a href="{:url('Match/lolList')}">英雄联盟</a></li>
-			<li><a href="{:url('Match/csList')}">CS</a></li>
+<!--			<li><a href="{:url('Match/lolList')}">英雄联盟</a></li>-->
+<!--			<li><a href="{:url('Match/csList')}">CS</a></li>-->
 			<li class="active"><a href="{:url('Match/footballList')}">足球比赛</a></li>
 			<li><a href="{:url('Match/basketballList')}">蓝球比赛</a></li>
 		</ul>
@@ -23,6 +23,20 @@
 					<option value="{$key}" <if condition="input('request.state') neq '' && input('request.state') eq $key">selected</if>>{$vo}</option>
 				</volist>
 			</select>
+
+			热门状态：
+			<select class="form-control" name="is_hot">
+				<option value="" <if condition="input('request.is_hot') eq ''">selected</if>>全部</option>
+				<option value="-1" <if condition="input('request.is_hot') eq -1">selected</if>>否</option>
+				<option value="1" <if condition="input('request.is_hot') eq 1">selected</if>>是</option>
+			</select>
+
+			比赛时间：
+			<input class="form-control js-bootstrap-date" name="start_time" id="start_time" autocomplete="off" value="{:input('request.start_time')}" aria-invalid="false" style="width: 110px;"> -
+			<input class="form-control js-bootstrap-date" name="end_time" id="end_time" autocomplete='off' value="{:input('request.end_time')}" aria-invalid="false" style="width: 110px;">
+
+
+
 			<input type="submit" class="btn btn-primary" style="margin-left: 10px;" value="查询">
 		</form>		
 		<form method="post" class="js-ajax-form" >
@@ -30,18 +44,21 @@
 				<thead>
 					<tr>
 						<th>所属游戏</th>
+						<th>赛事ID</th>
 						<th>赛事名称</th>
 						<th>A战队</th>
 						<th>B战队</th>
 						<th>比赛状态</th>
-						<th>总人数</th>
-						<th>直播流</th>
+						<th>是否热门</th>
+<!--						<th>总人数</th>-->
+<!--						<th>直播流</th>-->
 					</tr>
 				</thead> 
 				<tbody>
 					<foreach name="lists" item="vo">
 					<tr>
 						<td>足球比赛</td>
+						<td>{$vo['match_id']}</td>
 						<td>{$vo['ename']} </td>
 						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['ta_logo']}" alt="">&nbsp;&nbsp;{$vo['ta_name']}</td>
 						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['tb_logo']}" alt="">&nbsp;&nbsp;{$vo['tb_name']}</td>
@@ -49,10 +66,19 @@
 							{$vo.status}
 
 						</td>
-						<td>{:getSportsAllPeople($vo['homeId'],$vo['awayId'],'sports_football_player')}</td>
 						<td>
-							<a class="btn btn-xs btn-info liveurl" data-id="{$vo['match_id']}" >直播链接</a>
+
+							<if condition="$vo.is_hot eq 1">
+							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'table'=>'sports_football_match','is_hot'=>0])}" class="js-ajax-hot">取消热门</a>
+							<else />
+							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'table'=>'sports_football_match','is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
+							</if>
 						</td>
+
+<!--						<td>{:getSportsAllPeople($vo['homeId'],$vo['awayId'],'sports_football_player')}</td>-->
+<!--						<td>-->
+<!--							<a class="btn btn-xs btn-info liveurl" data-id="{$vo['match_id']}" >直播链接</a>-->
+<!--						</td>-->
 					</tr>
 					</foreach>
 				</tbody>
@@ -82,6 +108,21 @@
 				});
 				layer.full(lives);
 
+			});
+
+
+			$('.js-ajax-hot').click(function(e){
+				e.preventDefault();
+				var url = $(this).attr('href');
+				var that = $(this);
+
+				$.post(url, {}, function(res){
+					if(res.code == 1){
+						that.text(that.text() === '设为热门' ? '取消热门' : '设为热门');
+					} else {
+						alert(res.msg);
+					}
+				}, 'json');
 			});
 
 		})

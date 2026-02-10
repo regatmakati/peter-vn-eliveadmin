@@ -7,21 +7,21 @@ use think\Db;
 class MatchController extends AdminbaseController {
 
     public static $selfFootballMap = [
-        "10"=>"上半场",
-        "20"=>"中场",
-        "30"=>"下半场",
-        "40"=>"加时",
-        "50"=>"点球",
-        "60"=>"未开赛",
-        "70"=>"待定",
-        "80"=>"推迟",
-        "90"=>"中断",
-        "100"=>"腰斩",
-        "110"=>"取消",
-        "120"=>"完场",
+        '0' => '比赛异常',
+        '1' => '未开赛',
+        '2' => '上半场',
+        '3' => '中场',
+        '4' => '下半场',
+        '5' => '加时赛',
+        '6' => '加时赛(弃用)',
+        '7' => '点球决战',
+        '8' => '完场',
+        '9' => '延迟',
+        '10' => '中断',
+        '11' => '腰斩',
+        '12' => '取消',
+        '13' => '待定',
     ];
-
-
 
 
     public static $selfMap = [
@@ -47,6 +47,49 @@ class MatchController extends AdminbaseController {
 
 
     //蓝球比赛列表
+//    public function basketballList(){
+//
+//        $data = $this->request->param();
+//        $where=[];
+//
+//        $state = isset($data['state']) ? $data['state']: '';
+//        if($state!=''){
+//            $where[] = ['m.state','=',$state];
+//        }
+//
+//        $t_name = isset($data['t_name']) ? $data['t_name']: '';
+//        if($t_name!=''){
+//            $where[] = ['t_a.nameCn|t_b.nameCn','like',"%$t_name%"];
+//        }
+//
+//        $ename = isset($data['ename']) ? $data['ename']: '';
+//        if($ename!=''){
+//            $where[] = ['e.leagueNameCnShort','like',"%$ename%"];
+//        }
+//
+//        $lists = Db::name('sports_basketball_match')
+//            ->alias('m')
+//            ->join('sports_basketball_league e','m.leagueId=e.leagueId')
+//            ->join('sports_basketball_team t_a','m.homeId=t_a.teamId')
+//            ->join('sports_basketball_team t_b','m.awayId=t_b.teamId')
+//            ->field("m.leagueId,m.matchId as match_id,m.state as status,m.matchStartTime,m.matchId,m.homeId,m.live_url,m.awayId,t_a.nameCn as ta_name,t_b.nameCn as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.leagueNameCnShort as ename")
+//            ->where($where)
+//            ->order('matchStartTime', 'DESC')
+//            ->paginate(20);
+//        $lists->appends($data);
+//        $page = $lists->render();
+//        $lists = $lists->toArray();
+//        foreach ($lists['data'] as $key=>$value){
+//            $lists['data'][$key]['status'] = self::$selfMap[$value['status']];
+//        }
+//        $this->assign('states',self::$selfMap);
+//
+//        $this->assign('lists', $lists['data']);
+//        $this->assign("page", $page);
+//        return $this->fetch();
+//    }
+
+
     public function basketballList(){
 
         $data = $this->request->param();
@@ -54,70 +97,50 @@ class MatchController extends AdminbaseController {
 
         $state = isset($data['state']) ? $data['state']: '';
         if($state!=''){
-            $where[] = ['m.state','=',$state];
+            $where[] = ['m.status_id','=',$state];
         }
 
         $t_name = isset($data['t_name']) ? $data['t_name']: '';
         if($t_name!=''){
-            $where[] = ['t_a.nameCn|t_b.nameCn','like',"%$t_name%"];
+            $where[] = ['t_a.name_zh|t_b.name_zh','like',"%$t_name%"];
         }
 
         $ename = isset($data['ename']) ? $data['ename']: '';
         if($ename!=''){
-            $where[] = ['e.leagueNameCnShort','like',"%$ename%"];
+            $where[] = ['e.name_zh','like',"%$ename%"];
         }
 
-        $lists = Db::name('sports_basketball_match')
+
+        $is_hot = isset($data['is_hot']) ? $data['is_hot']: '';
+        if($is_hot!==''){
+            if($is_hot == '-1'){
+                $is_hot = 0;
+            }
+            $where[] = ['m.is_hot','=',$is_hot];
+        }
+
+        $start_time=isset($data['start_time']) ? $data['start_time']: '';
+        $end_time=isset($data['end_time']) ? $data['end_time']: '';
+
+        if($start_time!=""){
+            $where[]=['m.match_time','>=',strtotime($start_time)];
+        }
+
+        if($end_time!=""){
+            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24];
+        }
+
+
+
+        $sportDb = config('database.mysql_sport');
+        $lists = Db::connect($sportDb)->name('sports_basketball_match')
             ->alias('m')
-            ->join('sports_basketball_league e','m.leagueId=e.leagueId')
-            ->join('sports_basketball_team t_a','m.homeId=t_a.teamId')
-            ->join('sports_basketball_team t_b','m.awayId=t_b.teamId')
-            ->field("m.leagueId,m.matchId as match_id,m.state as status,m.matchStartTime,m.matchId,m.homeId,m.live_url,m.awayId,t_a.nameCn as ta_name,t_b.nameCn as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.leagueNameCnShort as ename")
+            ->join('sports_basketball_competition e','m.competition_id=e.id')
+            ->join('sports_basketball_team t_a','m.home_team_id=t_a.id')
+            ->join('sports_basketball_team t_b','m.away_team_id=t_b.id')
+            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot")
             ->where($where)
-            ->order('matchStartTime', 'DESC')
-            ->paginate(20);
-        $lists->appends($data);
-        $page = $lists->render();
-        $lists = $lists->toArray();
-        foreach ($lists['data'] as $key=>$value){
-            $lists['data'][$key]['status'] = self::$selfMap[$value['status']];
-        }
-        $this->assign('states',self::$selfMap);
-
-        $this->assign('lists', $lists['data']);
-        $this->assign("page", $page);
-        return $this->fetch();
-    }
-	
-    //足球比赛列表
-    public function footballList(){
-
-        $data = $this->request->param();
-        $where=[];
-
-        $state = isset($data['state']) ? $data['state']: '';
-        if($state!=''){
-            $where[] = ['m.state','=',$state];
-        }
-
-        $t_name = isset($data['t_name']) ? $data['t_name']: '';
-        if($t_name!=''){
-            $where[] = ['t_a.nameCn|t_b.nameCn','like',"%$t_name%"];
-        }
-
-        $ename = isset($data['ename']) ? $data['ename']: '';
-        if($ename!=''){
-            $where[] = ['e.leagueNameCnShort','like',"%$ename%"];
-        }
-
-        $lists = Db::name('sports_football_match')
-            ->alias('m')
-            ->join('sports_football_league e','m.leagueId=e.leagueId')
-            ->join('sports_football_team t_a','m.homeId=t_a.teamId')
-            ->join('sports_football_team t_b','m.awayId=t_b.teamId')
-            ->field("m.leagueId,m.matchId as match_id,m.state as status,m.matchStartTime,m.matchId,m.homeId,m.live_url,m.awayId,t_a.nameCn as ta_name,t_b.nameCn as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.leagueNameCnShort as ename")
-            ->where($where)
-            ->order('matchStartTime', 'DESC')
+            ->order('match_time', 'DESC')
             ->paginate(20);
 
         $lists->appends($data);
@@ -131,7 +154,73 @@ class MatchController extends AdminbaseController {
         $this->assign("page", $page);
         return $this->fetch();
     }
-	
+
+    //足球比赛列表
+    public function footballList(){
+
+        $data = $this->request->param();
+        $where=[];
+
+        $state = isset($data['state']) ? $data['state']: '';
+        if($state!=''){
+            $where[] = ['m.status_id','=',$state];
+        }
+
+        $t_name = isset($data['t_name']) ? $data['t_name']: '';
+        if($t_name!=''){
+            $where[] = ['t_a.name_zh|t_b.name_zh','like',"%$t_name%"];
+        }
+
+        $ename = isset($data['ename']) ? $data['ename']: '';
+        if($ename!=''){
+            $where[] = ['e.name_zh','like',"%$ename%"];
+        }
+
+
+        $is_hot = isset($data['is_hot']) ? $data['is_hot']: '';
+        if($is_hot!==''){
+            if($is_hot == '-1'){
+                $is_hot = 0;
+            }
+            $where[] = ['m.is_hot','=',$is_hot];
+        }
+
+
+        $start_time=isset($data['start_time']) ? $data['start_time']: '';
+        $end_time=isset($data['end_time']) ? $data['end_time']: '';
+
+        if($start_time!=""){
+            $where[]=['m.match_time','>=',strtotime($start_time)];
+        }
+
+        if($end_time!=""){
+            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24];
+        }
+
+
+        $sportDb = config('database.mysql_sport');
+        $lists = Db::connect($sportDb)->name('sports_football_match')
+            ->alias('m')
+            ->join('sports_football_competition e','m.competition_id=e.id')
+            ->join('sports_football_team t_a','m.home_team_id=t_a.id')
+            ->join('sports_football_team t_b','m.away_team_id=t_b.id')
+            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot")
+            ->where($where)
+            ->order('match_time', 'DESC')
+            ->paginate(20);
+
+        $lists->appends($data);
+        $page = $lists->render();
+        $lists = $lists->toArray();
+        foreach ($lists['data'] as $key=>$value){
+            $lists['data'][$key]['status'] = self::$selfFootballMap[$value['status']];
+        }
+        $this->assign('states',self::$selfFootballMap);
+        $this->assign('lists', $lists['data']);
+        $this->assign("page", $page);
+        return $this->fetch();
+    }
+
     //英雄联盟比赛列表
     public function lolList(){
 
@@ -249,4 +338,27 @@ class MatchController extends AdminbaseController {
         $this->assign('lists', $live_url);
         return $this->fetch();
     }
+
+
+
+
+    public function changeHot()
+    {
+
+        $id     = $this->request->param('id', 0, 'intval');
+        $isHot  = $this->request->param('is_hot', 0, 'intval');
+        $table  = $this->request->param('table', '');
+
+        if (!$id) $this->error('参数错误');
+
+        $sportDb = config('database.mysql_sport');
+        $res = Db::connect($sportDb)->name($table)->where('id', $id)->update(['is_hot' => $isHot]);
+
+        if ($res) {
+            $this->success('修改成功');
+        } else {
+            $this->error('修改失败');
+        }
+    }
+
 }
