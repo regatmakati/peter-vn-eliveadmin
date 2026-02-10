@@ -30,4 +30,17 @@ return [
     'chatUrl' => '101.33.118.229',
     'chatPort' => 9511,
     'socketSecretKey' => 'f7s8v8bnm9ad54c5badda7d6304r0higfuad',
+
+
+
+    'mysql_sport' => [
+        'type'     => 'mysql',
+        'hostname' => '172.19.0.14',
+        'database' => 'center_sports',
+        'username' => 'sports',
+        'password' => 'aO!FeJR8lAaH7*yW',
+        'hostport' => '3306',
+        'charset'  => 'utf8mb4',
+        'prefix'   => '',
+    ]
 ];
