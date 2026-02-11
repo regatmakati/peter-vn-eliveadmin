@@ -50,6 +50,7 @@
 						<th>B战队</th>
 						<th>比赛状态</th>
 						<th>是否热门</th>
+						<th>比赛时间</th>
 <!--						<th>总人数</th>-->
 <!--						<th>直播流</th>-->
 					</tr>
@@ -74,6 +75,7 @@
 							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'table'=>'sports_football_match','is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
 							</if>
 						</td>
+						<td>{:date('Y-m-d H:i:s',$vo['match_time'])}</td>
 
 <!--						<td>{:getSportsAllPeople($vo['homeId'],$vo['awayId'],'sports_football_player')}</td>-->
 <!--						<td>-->
