@@ -119,15 +119,22 @@ class MatchController extends AdminbaseController {
             $where[] = ['m.is_hot','=',$is_hot];
         }
 
-        $start_time=isset($data['start_time']) ? $data['start_time']: '';
-        $end_time=isset($data['end_time']) ? $data['end_time']: '';
+        // 今天
+        $today = date('Y-m-d');
+        // 10天后
+        $tenDaysLater = date('Y-m-d', strtotime('+10 days'));
+
+
+
+        $start_time=isset($data['start_time']) ? $data['start_time']: $today;
+        $end_time=isset($data['end_time']) ? $data['end_time']: $tenDaysLater;
 
         if($start_time!=""){
             $where[]=['m.match_time','>=',strtotime($start_time)];
         }
 
         if($end_time!=""){
-            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24];
+            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
 
@@ -138,9 +145,10 @@ class MatchController extends AdminbaseController {
             ->join('sports_basketball_competition e','m.competition_id=e.id')
             ->join('sports_basketball_team t_a','m.home_team_id=t_a.id')
             ->join('sports_basketball_team t_b','m.away_team_id=t_b.id')
-            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot")
+            ->join('sports_basketball_match_anchor a','m.id=a.match_id','left')
+            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot, a.user_ids")
             ->where($where)
-            ->order('match_time', 'DESC')
+            ->order('match_time', 'ASC')
             ->paginate(20);
 
         $lists->appends($data);
@@ -185,16 +193,21 @@ class MatchController extends AdminbaseController {
             $where[] = ['m.is_hot','=',$is_hot];
         }
 
+        // 今天
+        $today = date('Y-m-d');
+        // 10天后
+        $tenDaysLater = date('Y-m-d', strtotime('+10 days'));
 
-        $start_time=isset($data['start_time']) ? $data['start_time']: '';
-        $end_time=isset($data['end_time']) ? $data['end_time']: '';
+        $start_time=isset($data['start_time']) ? $data['start_time']: $today;
+        $end_time=isset($data['end_time']) ? $data['end_time']: $tenDaysLater;
+
 
         if($start_time!=""){
             $where[]=['m.match_time','>=',strtotime($start_time)];
         }
 
         if($end_time!=""){
-            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24];
+            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
 
@@ -204,9 +217,10 @@ class MatchController extends AdminbaseController {
             ->join('sports_football_competition e','m.competition_id=e.id')
             ->join('sports_football_team t_a','m.home_team_id=t_a.id')
             ->join('sports_football_team t_b','m.away_team_id=t_b.id')
-            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot")
+            ->join('sports_football_match_anchor a','m.id=a.match_id','left')
+            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot,a.user_ids")
             ->where($where)
-            ->order('match_time', 'DESC')
+            ->order('match_time', 'ASC')
             ->paginate(20);
 
         $lists->appends($data);
@@ -358,6 +372,117 @@ class MatchController extends AdminbaseController {
             $this->success('修改成功');
         } else {
             $this->error('修改失败');
+        }
+    }
+
+
+
+    public function addFootballAnchor()
+    {
+
+        $params    = $this->request->param();
+
+
+        $sportDb = config('database.mysql_sport');
+        $data = Db::connect($sportDb)->name('sports_football_match_anchor')->where([
+            'match_id' => $params['match_id'],
+        ])->find();
+
+        if($data){
+            $params['anchor_id'] = $data['user_ids'];
+        }else{
+            $params['anchor_id'] = '';
+        }
+
+        $this->assign('match_data', $params);
+        return $this->fetch();
+    }
+
+
+    public function addFootballAnchorPost()
+    {
+        $match_id     = $this->request->param('match_id', 0, 'intval');
+        $anchor_id  = $this->request->param('anchor_id', '');
+
+        if (!$match_id) $this->error('参数错误');
+
+        $sportDb = config('database.mysql_sport');
+        $data = Db::connect($sportDb)->name('sports_football_match_anchor')->where([
+            'match_id' => $match_id,
+        ])->find();
+
+        if(!$data){
+            $res = Db::connect($sportDb)->name('sports_football_match_anchor')->insert([
+                'match_id' => $match_id,
+                'user_ids' => $anchor_id,
+            ]);
+        }else{
+            $res = Db::connect($sportDb)->name('sports_football_match_anchor')->where('id', $data['id'])->update([
+                'match_id' => $match_id,
+                'user_ids' => $anchor_id,
+            ]);
+        }
+
+        if ($res) {
+            $this->success('绑定成功',"Match/footballList");
+        } else {
+            $this->error('绑定失败');
+        }
+    }
+
+
+
+
+    public function addBasketballAnchor()
+    {
+
+        $params    = $this->request->param();
+
+
+        $sportDb = config('database.mysql_sport');
+        $data = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where([
+            'match_id' => $params['match_id'],
+        ])->find();
+
+        if($data){
+            $params['anchor_id'] = $data['user_ids'];
+        }else{
+            $params['anchor_id'] = '';
+        }
+
+        $this->assign('match_data', $params);
+        return $this->fetch();
+    }
+
+
+    public function addBasketballAnchorPost()
+    {
+        $match_id     = $this->request->param('match_id', 0, 'intval');
+        $anchor_id  = $this->request->param('anchor_id', '');
+
+        if (!$match_id) $this->error('参数错误');
+
+        $sportDb = config('database.mysql_sport');
+        $data = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where([
+            'match_id' => $match_id,
+        ])->find();
+
+        if(!$data){
+            $res = Db::connect($sportDb)->name('sports_basketball_match_anchor')->insert([
+                'match_id' => $match_id,
+                'user_ids' => $anchor_id,
+            ]);
+        }else{
+            $res = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('id', $data['id'])->update([
+                'match_id' => $match_id,
+                'user_ids' => $anchor_id,
+            ]);
+        }
+
+        if ($res) {
+            $this->success('绑定成功',"Match/basketballList");
+        } else {
+            $this->error('绑定失败');
         }
     }
 

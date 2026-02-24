@@ -1,0 +1,47 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap">
+	<ul class="nav nav-tabs">
+		<li><a href="{:url('Match/basketballList')}">蓝球赛事</a></li>
+		<li class="active"><a href="{:url('Match/addBasketballAnchor')}">绑定主播</a></li>
+	</ul>
+	<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('Match/addBasketballAnchorPost')}">
+		<div class="form-group">
+			<label for="input-match_id" class="col-sm-2 control-label">赛事ID</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-match_id" name="match_id" value="{$match_data['match_id']}" readonly>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="input-ename" class="col-sm-2 control-label">联赛名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-ename"  value="{$match_data['ename']}" readonly>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="input-team" class="col-sm-2 control-label">比赛队伍</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-team"  value="{$match_data['ta_name'] .' vs '.$match_data['tb_name']}" readonly>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="input-anchor_id" class="col-sm-2 control-label"><span class="form-required">*</span>主播UID</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="input-anchor_id" name="anchor_id"  placeholder="多个主播id用英文逗号间隔,例如：121,254" value="{$match_data['anchor_id']}">
+
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+			</div>
+		</div>
+	</form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
