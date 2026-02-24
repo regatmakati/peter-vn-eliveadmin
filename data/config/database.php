@@ -35,7 +35,7 @@ return [
 
     'mysql_sport' => [
         'type'     => 'mysql',
-        'hostname' => '172.19.0.17',
+        'hostname' => '172.19.0.15',
         'database' => 'center_sports',
         'username' => 'sports',
         'password' => 'aO!FeJR8lAaH7*yW',
