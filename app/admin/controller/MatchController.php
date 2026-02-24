@@ -110,6 +110,10 @@ class MatchController extends AdminbaseController {
             $where[] = ['e.name_zh','like',"%$ename%"];
         }
 
+        $match_id = isset($data['match_id']) ? $data['match_id']: '';
+        if($match_id !=''){
+            $where[] = ['m.id','=',$match_id];
+        }
 
         $is_hot = isset($data['is_hot']) ? $data['is_hot']: '';
         if($is_hot!==''){
@@ -182,6 +186,11 @@ class MatchController extends AdminbaseController {
         $ename = isset($data['ename']) ? $data['ename']: '';
         if($ename!=''){
             $where[] = ['e.name_zh','like',"%$ename%"];
+        }
+
+        $match_id = isset($data['match_id']) ? $data['match_id']: '';
+        if($match_id !=''){
+            $where[] = ['m.id','=',$match_id];
         }
 
 
