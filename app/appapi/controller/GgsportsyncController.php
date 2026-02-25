@@ -22,13 +22,12 @@ class GgsportsyncController extends HomebaseController {
                     switch ($val['liveclassid']){
                         case 2:  // 篮球
                             $user_id = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id', $match_id)->value('user_ids');
-                            $val['room_id'] = $user_id;
                             break;
                         case 4:  // 足球
                             $user_id = Db::connect($sportDb)->name('sports_football_match_anchor')->where('match_id', $match_id)->value('user_ids');
-                            $val['room_id'] = $user_id;
                             break;
                         default:
+                            $user_id = $val['room_id'];
                             break;
 
                     }
@@ -37,6 +36,7 @@ class GgsportsyncController extends HomebaseController {
 //                        continue;
 //                    }
 
+                    $val['room_id'] = $user_id;
 
 					// $one = Db::name('varchar_match')->where("match_id='$match_id'")->find();
 					// if(!$one){
