@@ -27,14 +27,14 @@ class GgsportsyncController extends HomebaseController {
                             $user_id = Db::connect($sportDb)->name('sports_football_match_anchor')->where('match_id', $match_id)->value('user_ids');
                             break;
                         default:
-                            $user_id = $val['room_id'];
+                            $user_id = 0;
                             break;
 
                     }
 
-//                    if(!$user_id){
-//                        continue;
-//                    }
+                    if(!$user_id){
+                        continue;
+                    }
 
                     $val['room_id'] = $user_id;
 
