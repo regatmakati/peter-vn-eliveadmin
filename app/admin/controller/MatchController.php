@@ -24,6 +24,25 @@ class MatchController extends AdminbaseController {
     ];
 
 
+    public static $selfBasketballMap = [
+        "0" => "比赛异常",
+        "1" => "未开赛",
+        "2" => "第一节",
+        "3" => "第一节完",
+        "4" => "第二节",
+        "5" => "第二节完",
+        "6" => "第三节",
+        "7" => "第三节完",
+        "8" => "第四节",
+        "9" => "加时",
+        "10" => "完场",
+        "11" => "中断",
+        "12" => "取消",
+        "13" => "延期",
+        "14" => "腰斩",
+        "15" => "待定",
+    ];
+
     public static $selfMap = [
         "0"=>"未开赛",
         "10"=>"第一节",
@@ -159,9 +178,9 @@ class MatchController extends AdminbaseController {
         $page = $lists->render();
         $lists = $lists->toArray();
         foreach ($lists['data'] as $key=>$value){
-            $lists['data'][$key]['status'] = self::$selfFootballMap[$value['status']];
+            $lists['data'][$key]['status'] = self::$selfBasketballMap[$value['status']];
         }
-        $this->assign('states',self::$selfFootballMap);
+        $this->assign('states',self::$selfBasketballMap);
         $this->assign('lists', $lists['data']);
         $this->assign("page", $page);
         return $this->fetch();
