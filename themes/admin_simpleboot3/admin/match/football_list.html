@@ -74,9 +74,9 @@
 						<td>
 
 							<if condition="$vo.is_hot eq 1">
-							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'is_hot'=>0])}" class="js-ajax-hot">取消热门</a>
+							<a href="{:url('Match/changeHot',['id'=>$vo['id'],'is_hot'=>0])}" class="js-ajax-hot">取消热门</a>
 							<else />
-							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
+							<a href="{:url('Match/changeHot',['id'=>$vo['id'],'is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
 							</if>
 						</td>
 						<td>{:date('Y-m-d H:i:s',$vo['start_time'])}</td>
