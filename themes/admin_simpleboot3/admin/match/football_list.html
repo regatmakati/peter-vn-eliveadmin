@@ -64,9 +64,9 @@
 					<tr>
 						<td>足球比赛</td>
 						<td>{$vo['match_id']}</td>
-						<td>{$vo['ename']} </td>
-						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['ta_logo']}" alt="">&nbsp;&nbsp;{$vo['ta_name']}</td>
-						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['tb_logo']}" alt="">&nbsp;&nbsp;{$vo['tb_name']}</td>
+						<td>{$vo['league_name']} </td>
+						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['team_logo']}" alt="">&nbsp;&nbsp;{$vo['team_name']}</td>
+						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['away_team_logo']}" alt="">&nbsp;&nbsp;{$vo['away_team_name']}</td>
 						<td>
 							{$vo.status}
 
@@ -74,17 +74,16 @@
 						<td>
 
 							<if condition="$vo.is_hot eq 1">
-							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'table'=>'sports_football_match','is_hot'=>0])}" class="js-ajax-hot">取消热门</a>
+							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'is_hot'=>0])}" class="js-ajax-hot">取消热门</a>
 							<else />
-							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'table'=>'sports_football_match','is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
+							<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
 							</if>
 						</td>
-						<td>{:date('Y-m-d H:i:s',$vo['match_time'])}</td>
+						<td>{:date('Y-m-d H:i:s',$vo['start_time'])}</td>
 						<td>{$vo['user_ids']}</td>
 
-<!--						<td>{:getSportsAllPeople($vo['homeId'],$vo['awayId'],'sports_football_player')}</td>-->
 						<td>
-							<a href="{:url('Match/addFootballAnchor',['match_id'=>$vo['match_id'],'ename'=>$vo['ename'],'ta_name'=>$vo['ta_name'],'tb_name'=>$vo['tb_name']])}" class="btn btn-xs btn-primary">绑定主播</a>
+							<a href="{:url('Match/addFootballAnchor',['match_id'=>$vo['match_id'],'ename'=>$vo['league_name'],'ta_name'=>$vo['team_name'],'tb_name'=>$vo['away_team_name']])}" class="btn btn-xs btn-primary">绑定主播</a>
 						</td>
 					</tr>
 					</foreach>
