@@ -109,7 +109,7 @@ class GgsportsyncController extends HomebaseController {
         echo  "当前比赛ID: {$lastMatchId}\n";
 
         $sportDb = config('database.gogo_live');
-        $newMatch = Db::connect($sportDb)->name('ggscore_match')->field('id')->name('ggscore_match')->order('id desc')->find();
+        $newMatch = Db::connect($sportDb)->name('ggscore_match')->field('id')->order('id desc')->find();
         $newMatchId = $newMatch['id'];
         echo  "最新比赛ID: {$newMatchId}\n";
         $num = $newMatchId-$lastMatchId;
