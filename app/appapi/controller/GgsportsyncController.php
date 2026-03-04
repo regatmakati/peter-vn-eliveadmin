@@ -99,6 +99,55 @@ class GgsportsyncController extends HomebaseController {
 		
 		exit('同步完成');
 		
-	}	
+	}
+
+
+    function syncMatch(){
+
+        $lastMatch = Db::name('ggscore_match')->field('id')->order('id desc')->find();
+        $lastMatchId = $lastMatch['id'];
+        echo  "当前比赛ID: {$lastMatchId}\n";
+
+        $sportDb = config('database.gogo_live');
+        $newMatch = Db::connect($sportDb)->name('ggscore_match')->field('id')->order('id desc')->find();
+        $newMatchId = $newMatch['id'];
+        echo  "最新比赛ID: {$newMatchId}\n";
+        $num = $newMatchId-$lastMatchId;
+
+        echo  "有 {$num} 条比赛数据需要同步\n";
+
+        if($num>0){
+            $list = Db::connect($sportDb)->name('ggscore_match')->where('id','between',[$lastMatchId+1, $newMatchId])->order('id asc')->select();
+            $data = [];
+            foreach ($list as $k => $v){
+                $inert = [];
+                $inert['id'] = $v['id'];
+                $inert['match_id'] = $v['match_id'];
+                $inert['sport_id'] = $v['sport_id'];
+                $inert['start_time'] = $v['start_time'];
+                $inert['status'] = $v['status'];
+                $inert['has_push'] = $v['has_push'];
+                $inert['team_id'] = $v['team_id'];
+                $inert['team_name'] = $v['team_name'];
+                $inert['team_name_en'] = $v['team_name_en'];
+                $inert['team_logo'] = $v['team_logo'];
+                $inert['away_team_id'] = $v['away_team_id'];
+                $inert['away_team_name'] = $v['away_team_name'];
+                $inert['away_team_name_en'] = $v['away_team_name_en'];
+                $inert['away_team_logo'] = $v['away_team_logo'];
+                $inert['league_id'] = $v['league_id'];
+                $inert['league_name'] = $v['league_name'];
+                $inert['league_name_en'] = $v['league_name_en'];
+                $inert['league_logo'] = $v['league_logo'];
+                $inert['is_hot'] = $v['is_hot'];
+                $data[] = $inert;
+            }
+
+            Db::name('ggscore_match')->insertAll($data);
+        }
+
+        exit('同步完成');
+
+    }
 
 }

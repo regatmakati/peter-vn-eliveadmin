@@ -527,7 +527,48 @@ class livebackController extends HomebaseController {
         
         
     }
-    
+
+
+    public function getGgscoreLeagueshData(){
+        $data = $this->request->param();
+        $sportid = $data['sport_id'];
+        $page  = $data['page'] ?? 1;
+
+        $result = $this->curl_get("https://b.antdata.cc/sport/api/v1/leagues?page={$page}&per_page=100&token=7QVSYC3RrW347mzDSuk7v8fz6Rj6TrfccPF44XDBsh8a6Jj3cj&sport_id={$sportid}");//&status=live
+        $result = json_decode($result, true);
+        print_r($result);
+        if (isset($result['code']) && $result['code'] == 0) {//有数据
+            if (isset($result['data']['list'])) {
+                $data = $result['data']['list'];
+                foreach ($data as $key => $val) {
+                    $league_id = $val['id'];
+                    $one = Db::name('ggscore_league')->where("league_id={$league_id}")->find();
+                    if (!$one) {
+                        $arr = array(
+                            'league_id' => $val['id'],
+                            'league_name' => $val['name'],
+                            'league_name_en' => $val['abbr_en'],
+                            'league_logo' => $val['logo'],
+                            'league_icon' => $val['icon'],
+                            'sport_id' => $val['sport_id'],
+                            'has_live' => $val['has_live'],
+                            'update_time' => $val['update_time'],
+                        );
+                        $id = DB::name('ggscore_league')->insertGetId($arr);
+                        echo "插入成功,比赛id:{$league_id}";
+
+                    }
+
+                }
+
+            }
+            echo "执行完成";
+
+        }
+
+    }
+
+
     
     protected function createGgroom($data){
         //print_r($data);

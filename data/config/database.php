@@ -41,6 +41,6 @@ return [
         'password' => 'aO!FeJR8lAaH7*yW',
         'hostport' => '3306',
         'charset'  => 'utf8mb4',
-        'prefix'   => '',
+        'prefix'   => 'cmf_',
     ]
 ];
