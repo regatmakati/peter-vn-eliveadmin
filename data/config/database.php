@@ -32,14 +32,14 @@ return [
     'socketSecretKey' => 'f7s8v8bnm9ad54c5badda7d6304r0higfuad',
 
 
-    'gogo_live' => [
+    'mysql_sport' => [
         'type'     => 'mysql',
         'hostname' => '129.226.143.41',
-        'database' => 'live',
-        'username' => 'live',
+        'database' => 'center_sports',
+        'username' => 'sports',
         'password' => 'aO!FeJR8lAaH7*yW',
         'hostport' => '3306',
         'charset'  => 'utf8mb4',
-        'prefix'   => 'cmf_',
+        'prefix'   => '',
     ]
 ];

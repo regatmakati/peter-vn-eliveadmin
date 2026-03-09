@@ -1,4 +1,5 @@
 <?php
+ob_start(); // 在文件最开头添加这一行
 /*----------------------------------------------------------------------------*\
   Websocket client
   By Paragi 2013, Simon Riget MIT license.
