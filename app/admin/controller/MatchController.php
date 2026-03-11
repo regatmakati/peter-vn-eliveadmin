@@ -145,7 +145,7 @@ class MatchController extends AdminbaseController {
         // 今天
         $today = date('Y-m-d');
         // 10天后
-        $tenDaysLater = date('Y-m-d', strtotime('+10 days'));
+        $tenDaysLater = date('Y-m-d', strtotime('+3 days'));
 
 
 
@@ -160,7 +160,7 @@ class MatchController extends AdminbaseController {
             $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
-//        $where[]=['m.live_url_1','!=',''];
+        $where[]=['m.pushflag','=','1'];
 
         $sportDb = config('database.mysql_sport');
         $lists = Db::connect($sportDb)->name('sports_basketball_match')
@@ -224,7 +224,7 @@ class MatchController extends AdminbaseController {
         // 今天
         $today = date('Y-m-d');
         // 10天后
-        $tenDaysLater = date('Y-m-d', strtotime('+10 days'));
+        $tenDaysLater = date('Y-m-d', strtotime('+3 days'));
 
         $start_time=isset($data['start_time']) ? $data['start_time']: $today;
         $end_time=isset($data['end_time']) ? $data['end_time']: $tenDaysLater;
@@ -238,7 +238,7 @@ class MatchController extends AdminbaseController {
             $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
-//        $where[]=['m.live_url_1','<>',''];
+        $where[]=['m.pushflag','=','1'];
         $sportDb = config('database.mysql_sport');
         $lists = Db::connect($sportDb)->name('sports_football_match')
             ->alias('m')
