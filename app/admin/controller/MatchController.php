@@ -160,7 +160,7 @@ class MatchController extends AdminbaseController {
             $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
-        $where[]=['m.live_url_1','!=',''];
+//        $where[]=['m.live_url_1','!=',''];
 
         $sportDb = config('database.mysql_sport');
         $lists = Db::connect($sportDb)->name('sports_basketball_match')
@@ -238,7 +238,7 @@ class MatchController extends AdminbaseController {
             $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
-        $where[]=['m.live_url_1','<>',''];
+//        $where[]=['m.live_url_1','<>',''];
         $sportDb = config('database.mysql_sport');
         $lists = Db::connect($sportDb)->name('sports_football_match')
             ->alias('m')
