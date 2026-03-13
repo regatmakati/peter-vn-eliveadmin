@@ -881,6 +881,98 @@ class livebackController extends HomebaseController {
 			}
 			echo "执行完成";
 		}
-    }      
+    }
 
+
+
+
+
+    function syncBasketballMatchAnchor(){
+        $sportDb = config('database.mysql_sport');
+        $time = time();
+        $minUid = 992;
+        $maxUid = 1092;
+        $matchList = Db::connect($sportDb)->name('sports_basketball_match')
+            ->alias('m')
+            ->join('sports_basketball_match_anchor a','m.id=a.match_id','left')
+            ->field('m.id as match_id, m.match_time, a.user_ids')
+            ->where('m.match_time', '>=', $time)
+            ->where('m.pushflag',1)
+            ->order('m.id','asc')
+            ->select();
+
+
+        if($matchList){
+
+            $insertAll = [];
+            $lastUserIds =  Db::connect($sportDb)->name('sports_basketball_match_anchor')->order('id','desc')->limit(1)->value('user_ids');
+            if(!$lastUserIds){
+                $lastUserIds = $minUid-1;
+            }
+
+            foreach ($matchList as $v)  {
+                if(!$v['user_ids']){
+                    if($lastUserIds == $maxUid){
+                        $lastUserIds = $minUid-1;
+                    }
+
+                    $data = [];
+                    $data['match_id'] = $v['match_id'];
+                    $data['user_ids'] = $lastUserIds+1;
+                    $insertAll[] = $data;
+
+                    $lastUserIds++;
+                }
+
+            }
+
+            Db::connect($sportDb)->name('sports_basketball_match_anchor')->insertAll($insertAll);
+        }
+
+        echo "执行完成";
+    }
+
+
+    function syncFootballMatchAnchor(){
+        $sportDb = config('database.mysql_sport');
+        $time = time();
+        $minUid = 892;
+        $maxUid = 991;
+        $matchList = Db::connect($sportDb)->name('sports_football_match')
+            ->alias('m')
+            ->join('sports_football_match_anchor a','m.id=a.match_id','left')
+            ->field('m.id as match_id, m.match_time, a.user_ids')
+            ->where('m.match_time', '>=', $time)
+            ->where('m.pushflag',1)
+            ->order('m.id','asc')
+            ->select();
+
+        if($matchList){
+
+            $insertAll = [];
+            $lastUserIds =  Db::connect($sportDb)->name('sports_football_match_anchor')->order('id','desc')->limit(1)->value('user_ids');
+            if(!$lastUserIds){
+                $lastUserIds = $minUid-1;
+            }
+
+            foreach ($matchList as $v)  {
+                if(!$v['user_ids']){
+                    if($lastUserIds == $maxUid){
+                        $lastUserIds = $minUid-1;
+                    }
+
+                    $data = [];
+                    $data['match_id'] = $v['match_id'];
+                    $data['user_ids'] = $lastUserIds+1;
+                    $insertAll[] = $data;
+
+                    $lastUserIds++;
+                }
+
+            }
+
+            Db::connect($sportDb)->name('sports_football_match_anchor')->insertAll($insertAll);
+        }
+        echo "执行完成";
+    }
 }
