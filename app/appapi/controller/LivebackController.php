@@ -1039,7 +1039,7 @@ class livebackController extends HomebaseController {
                 "title" => $val['ename'].'['.$val['ta_name'].' VS '.$val['tb_name'].']',
                 "city" => '好像在火星',
                 "stream" => $streamid,
-                "pic_full_url" => '',
+                "pic_full_url" => 'bg.png',
                 "pull" => $pull,
                 "goodnum" => 0,
                 "isvideo" => 0,
