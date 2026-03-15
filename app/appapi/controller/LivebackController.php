@@ -975,4 +975,93 @@ class livebackController extends HomebaseController {
         }
         echo "执行完成";
     }
+
+
+    function createBasketballLive()
+    {
+        $sportDb = config('database.mysql_sport');
+        $endTime = time();
+        $startTime = time() - 15*60;
+        $matchList = Db::connect($sportDb)->name('sports_basketball_match')
+            ->alias('m')
+            ->join('sports_basketball_competition e','m.competition_id=e.id')
+            ->join('sports_basketball_team t_a','m.home_team_id=t_a.id')
+            ->join('sports_basketball_team t_b','m.away_team_id=t_b.id')
+            ->join('sports_basketball_match_anchor a','m.id=a.match_id','left')
+            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.live_url_1, a.user_ids")
+            ->where('m.match_time', 'between', [$startTime, $endTime])
+            ->where('m.live_url_1', '<>', '')
+            ->where('m.pushflag',1)
+            ->whereIn('m.status_id',[1,2,3,4,5,6,7,8,9])
+            ->order('m.id','asc')
+            ->select();
+
+        $this->createRoomV3($matchList, 2);
+    }
+
+
+    function createFootballLive()
+    {
+        $sportDb = config('database.mysql_sport');
+        $endTime = time();
+        $startTime = time() - 15*60;
+        $matchList = Db::connect($sportDb)->name('sports_football_match')
+            ->alias('m')
+            ->join('sports_football_competition e','m.competition_id=e.id')
+            ->join('sports_football_team t_a','m.home_team_id=t_a.id')
+            ->join('sports_football_team t_b','m.away_team_id=t_b.id')
+            ->join('sports_football_match_anchor a','m.id=a.match_id','left')
+            ->field("m.competition_id,m.id as match_id,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.live_url_1, a.user_ids")
+            ->where('m.match_time', 'between', [$startTime, $endTime])
+            ->where('m.live_url_1', '<>', '')
+            ->where('m.pushflag',1)
+            ->whereIn('m.status_id',[1,2,3,4,5,6,7])
+            ->order('m.id','asc')
+            ->select();
+
+        $this->createRoomV3($matchList, 4);
+    }
+
+
+    protected function createRoomV3($data,$isdj=0){
+        $time = time() + 4 * 3600;
+        foreach($data as $key=>$val){
+
+            $streamid =  $val['live_url_1'];
+            $pull = PrivateKeyA('rtmp', $streamid, 0);
+
+            //加入无人值守直播间
+            $one = Db::name('live')->where("uid = '{$val['user_ids']}'")->find();
+            $dataroom = array(
+                "uid" => $val['user_ids'],
+                "showid" => $time,
+                "starttime" => $val['match_time'],
+                "title" => $val['ename'].'['.$val['ta_name'].' VS '.$val['tb_name'].']',
+                "city" => '好像在火星',
+                "stream" => $streamid,
+                "pic_full_url" => '',
+                "pull" => $pull,
+                "goodnum" => 0,
+                "isvideo" => 0,
+                "islive" => 1,
+                "ishot" => 1,
+                "liveclassid" => $isdj,
+                "hotvotes" => 0,
+                "pkuid" => 0,
+                "pkstream" => '',
+                "banker_coin" => 10000000,
+                "notice" => '添加下方主播联系方式获取红单',
+                "match_id" => $val['match_id'],
+            );
+            if($one){
+                DB::name('live')->where("uid = '{$val['user_ids']}'")->update($dataroom);
+            }else{
+                DB::name('live')->insertGetId($dataroom);
+            }
+            echo "插入成功,流id:{$streamid}\n\n";
+        }
+
+        Db::name('live')->where("showid != '$time' and isvideo=1")->delete();
+
+    }
 }
