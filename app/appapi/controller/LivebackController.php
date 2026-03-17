@@ -1061,7 +1061,12 @@ class livebackController extends HomebaseController {
             echo "插入成功,流id:{$streamid}\n\n";
         }
 
-        Db::name('live')->where("showid != '$time' and isvideo=1")->delete();
+        $res = Db::name('live')->where("showid != '{$time}' and islive=1 and liveclassid={$isdj}")->delete();
+        if($res){
+            echo "删除已结束的直播间成功\n\n";
+        }else{
+            echo "删除已结束的直播间失败\n\n";
+        }
 
     }
 }
