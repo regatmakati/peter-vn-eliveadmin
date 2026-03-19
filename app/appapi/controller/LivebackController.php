@@ -1028,45 +1028,70 @@ class livebackController extends HomebaseController {
         foreach($data as $key=>$val){
 
             $streamid =  $val['live_url_1'];
-            $pull = PrivateKeyA('rtmp', $streamid, 0);
-
-            //加入无人值守直播间
-            $one = Db::name('live')->where("uid = '{$val['user_ids']}'")->find();
-            $dataroom = array(
-                "uid" => $val['user_ids'],
-                "showid" => $time,
-                "starttime" => $val['match_time'],
-                "title" => $val['ename'].'['.$val['ta_name'].' VS '.$val['tb_name'].']',
-                "city" => '好像在火星',
-                "stream" => $streamid,
-                "pic_full_url" => 'bg.png',
-                "pull" => $pull,
-                "goodnum" => 0,
-                "isvideo" => 0,
-                "islive" => 1,
-                "ishot" => 1,
-                "liveclassid" => $isdj,
-                "hotvotes" => 0,
-                "pkuid" => 0,
-                "pkstream" => '',
-                "banker_coin" => 10000000,
-                "notice" => '添加下方主播联系方式获取红单',
-                "match_id" => $val['match_id'],
-            );
-            if($one){
-                DB::name('live')->where("uid = '{$val['user_ids']}'")->update($dataroom);
-            }else{
-                DB::name('live')->insertGetId($dataroom);
+            if($this->getStreamStatus($streamid)) {
+                $pull = PrivateKeyA('rtmp', $streamid, 0);
+                //加入无人值守直播间
+                $one = Db::name('live')->where("uid = '{$val['user_ids']}'")->find();
+                $dataroom = array(
+                    "uid" => $val['user_ids'],
+                    "showid" => $time,
+                    "starttime" => $val['match_time'],
+                    "title" => $val['ename'] . '[' . $val['ta_name'] . ' VS ' . $val['tb_name'] . ']',
+                    "city" => '好像在火星',
+                    "stream" => $streamid,
+                    "pic_full_url" => 'bg.png',
+                    "pull" => $pull,
+                    "goodnum" => 0,
+                    "isvideo" => 0,
+                    "islive" => 1,
+                    "ishot" => 1,
+                    "liveclassid" => $isdj,
+                    "hotvotes" => 0,
+                    "pkuid" => 0,
+                    "pkstream" => '',
+                    "banker_coin" => 10000000,
+                    "notice" => '添加下方主播联系方式获取红单',
+                    "match_id" => $val['match_id'],
+                );
+                if ($one) {
+                    DB::name('live')->where("uid = '{$val['user_ids']}'")->update($dataroom);
+                } else {
+                    DB::name('live')->insertGetId($dataroom);
+                }
+                echo "插入成功,流id:{$streamid}\n\n";
             }
-            echo "插入成功,流id:{$streamid}\n\n";
         }
 
-        $res = Db::name('live')->where("showid != '{$time}' and islive=1 and liveclassid={$isdj}")->delete();
-        if($res){
-            echo "删除已结束的直播间成功\n\n";
-        }else{
-            echo "删除已结束的直播间失败\n\n";
-        }
+//        $res = Db::name('live')->where("showid != '{$time}' and islive=1 and liveclassid={$isdj}")->delete();
+//        if($res){
+//            echo "删除已结束的直播间成功\n\n";
+//        }else{
+//            echo "删除已结束的直播间失败\n\n";
+//        }
 
     }
+
+
+
+    function  checkLiveStatus()
+    {
+        $list = Db::name('live')->select();
+        if($list){
+            foreach ($list as $v){
+                if(!$this->getStreamStatus($v['stream'])){
+                    $res = Db::name('live')->where('uid', $v['uid'])->delete();
+                    if($res){
+                        echo "删除已结束的直播间成功, uid:{$v['uid']} \n\n";
+                    }else{
+                        echo "删除已结束的直播间失败, uid:{$v['uid']}\n\n";
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
+
 }
