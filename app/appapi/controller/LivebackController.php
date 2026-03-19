@@ -637,6 +637,7 @@ class livebackController extends HomebaseController {
     
     protected function createRoom($data,$isdj=0){
         //$status = [4,6,2,52,1,51,7,18,100];
+        $sportDb = config('database.mysql_sport');
         $time = time() - 60;
          foreach($data as $key=>$val){
             if($val['pushurl1']){//存在流
@@ -652,29 +653,33 @@ class livebackController extends HomebaseController {
                 $num = count($uids);
                 
                 if(!$one && $num < 200  && $this->getStreamStatus($streamid)){
-                    $dataroom = array(
-                        "uid" => $this->getRandUid(),
-                        "showid" => $val['match_time'],
-                        "starttime" => $val['match_time'],
-                        "title" => $val['comp'].'['.$val['home'].' VS '.$val['away'].']',
-                        "city" => '好像在火星',
-                        "stream" => $streamid,
-                        "thumb" => '',
-                        "pull" => $pull,
-                        "goodnum" => 0,
-                        "isvideo" => 0,
-                        "islive" => 1,
-                        "ishot" => 1,
-                        "liveclassid" => $isdj?7:$this->getGameType($val['sport_id']),
-                        "hotvotes" => 0,
-                        "pkuid" => 0,
-                        "pkstream" => '',
-                        "banker_coin" => 10000000,
-                        "notice" => '添加下方主播联系方式获取红单',
-                        "match_id" => $matchid
-                    );
-                    $rs = DB::name('live')->insertGetId($dataroom);
-                    echo "插入成功,流id:{$streamid}\n\n";
+                    $uid = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id',$matchid)->value('user_ids');
+                    if($uid){
+                        $dataroom = array(
+                            "uid" => $uid,
+                            "showid" => $val['match_time'],
+                            "starttime" => $val['match_time'],
+                            "title" => $val['comp'].'['.$val['home'].' VS '.$val['away'].']',
+                            "city" => '好像在火星',
+                            "stream" => $streamid,
+                            "thumb" => '',
+                            "pull" => $pull,
+                            "goodnum" => 0,
+                            "isvideo" => 0,
+                            "islive" => 1,
+                            "ishot" => 1,
+                            "liveclassid" => $isdj?7:$this->getGameType($val['sport_id']),
+                            "hotvotes" => 0,
+                            "pkuid" => 0,
+                            "pkstream" => '',
+                            "banker_coin" => 10000000,
+                            "notice" => '添加下方主播联系方式获取红单',
+                            "match_id" => $matchid
+                        );
+                        $rs = DB::name('live')->insertGetId($dataroom);
+                        echo "插入成功,流id:{$streamid}\n\n";
+                    }
+
                 }
             }
         }       
