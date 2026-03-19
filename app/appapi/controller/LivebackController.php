@@ -981,7 +981,7 @@ class livebackController extends HomebaseController {
     {
         $sportDb = config('database.mysql_sport');
         $endTime = time();
-        $startTime = time() - 15*60;
+        $startTime = time() - 60*60;
         $matchList = Db::connect($sportDb)->name('sports_basketball_match')
             ->alias('m')
             ->join('sports_basketball_competition e','m.competition_id=e.id')
@@ -1004,7 +1004,7 @@ class livebackController extends HomebaseController {
     {
         $sportDb = config('database.mysql_sport');
         $endTime = time();
-        $startTime = time() - 15*60;
+        $startTime = time() - 60*60;
         $matchList = Db::connect($sportDb)->name('sports_football_match')
             ->alias('m')
             ->join('sports_football_competition e','m.competition_id=e.id')
