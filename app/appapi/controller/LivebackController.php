@@ -653,7 +653,15 @@ class livebackController extends HomebaseController {
                 $num = count($uids);
                 
                 if(!$one && $num < 200  && $this->getStreamStatus($streamid)){
-                    $uid = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id',$matchid)->value('user_ids');
+                    $liveClassId = $this->getGameType($val['sport_id']);
+                    if($liveClassId == 2){
+                        $uid = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id',$matchid)->value('user_ids');
+                    }else if($liveClassId == 4){
+                        $uid = Db::connect($sportDb)->name('sports_football_match_anchor')->where('match_id',$matchid)->value('user_ids');
+                    }else{
+                        $uid = 0;
+                    }
+
                     if($uid){
                         $dataroom = array(
                             "uid" => $uid,
