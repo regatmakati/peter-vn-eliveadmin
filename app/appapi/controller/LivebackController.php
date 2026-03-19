@@ -981,7 +981,7 @@ class livebackController extends HomebaseController {
     {
         $sportDb = config('database.mysql_sport');
         $endTime = time();
-        $startTime = time() - 60*60;
+        $startTime = time() - 2*60*60;
         $matchList = Db::connect($sportDb)->name('sports_basketball_match')
             ->alias('m')
             ->join('sports_basketball_competition e','m.competition_id=e.id')
@@ -990,7 +990,7 @@ class livebackController extends HomebaseController {
             ->join('sports_basketball_match_anchor a','m.id=a.match_id','left')
             ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.live_url_1, a.user_ids")
             ->where('m.match_time', 'between', [$startTime, $endTime])
-            ->where('m.live_url_1', '<>', '')
+            ->where('m.live_url_1 != ""')
             ->where('m.pushflag',1)
             ->whereIn('m.status_id',[1,2,3,4,5,6,7,8,9])
             ->order('m.id','asc')
@@ -1004,7 +1004,7 @@ class livebackController extends HomebaseController {
     {
         $sportDb = config('database.mysql_sport');
         $endTime = time();
-        $startTime = time() - 60*60;
+        $startTime = time() - 2*60*60;
         $matchList = Db::connect($sportDb)->name('sports_football_match')
             ->alias('m')
             ->join('sports_football_competition e','m.competition_id=e.id')
@@ -1013,7 +1013,7 @@ class livebackController extends HomebaseController {
             ->join('sports_football_match_anchor a','m.id=a.match_id','left')
             ->field("m.competition_id,m.id as match_id,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.live_url_1, a.user_ids")
             ->where('m.match_time', 'between', [$startTime, $endTime])
-            ->where('m.live_url_1', '<>', '')
+            ->where('m.live_url_1 != ""')
             ->where('m.pushflag',1)
             ->whereIn('m.status_id',[1,2,3,4,5,6,7])
             ->order('m.id','asc')
