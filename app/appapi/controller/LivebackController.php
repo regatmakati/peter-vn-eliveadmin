@@ -346,7 +346,7 @@ class livebackController extends HomebaseController {
         //获取GGscore的比赛信息
         //$this->getGgscoreMatchData();
         //获取全部流
-        $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=sptlrtuou&secret=f47ee79e5dc85b89940598232ba6b3a8');
+        $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=nalsince&secret=85354e61faa389fc488051eb144f4d89');
         $result = json_decode( $result, true);
         //print_r($result);
         if(isset($result['code']) && $result['code'] == 0){//有数据
@@ -354,7 +354,7 @@ class livebackController extends HomebaseController {
             $this->createRoom($data);
         }
         //单独获取电竟流
-        $result = $this->curl_get('https://video.open.sportnanoapi.com/esports_pushurl?user=sptlrtuou&secret=f47ee79e5dc85b89940598232ba6b3a8');
+        $result = $this->curl_get('https://video.open.sportnanoapi.com/esports_pushurl?user=nalsince&secret=85354e61faa389fc488051eb144f4d89');
         $result = json_decode( $result, true);
         //print_r($result);
         if(isset($result['code']) && $result['code'] == 0){//有数据
