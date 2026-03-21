@@ -661,16 +661,19 @@ class livebackController extends HomebaseController {
                         //计算开播数量 目前仅有53个主播
                         $num = DB::name('live')->where('liveclassid', $liveClassId)->count();
                         $uid = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id',$matchid)->value('user_ids');
+                        $uid_one  = Db::name('live')->where("uid={$uid}")->find();
                     }else if($liveClassId == 4){
                         //计算开播数量 目前仅有53个主播
                         $num = DB::name('live')->where('liveclassid', $liveClassId)->count();
                         $uid = Db::connect($sportDb)->name('sports_football_match_anchor')->where('match_id',$matchid)->value('user_ids');
+                        $uid_one  = Db::name('live')->where("uid={$uid}")->find();
                     }else{
                         $uid = 0;
                         $num = 0;
+                        $uid_one = 1;
                     }
 
-                    if($uid && $num < 100){
+                    if($uid && !$uid_one && $num < 100){
                         $dataroom = array(
                             "uid" => $uid,
                             "showid" => $val['match_time'],
