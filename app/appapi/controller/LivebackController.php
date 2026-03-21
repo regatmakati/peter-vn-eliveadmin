@@ -353,14 +353,14 @@ class livebackController extends HomebaseController {
             $data =  $result['data'];
             $this->createRoom($data);
         }
-        //单独获取电竟流
-        $result = $this->curl_get('https://video.open.sportnanoapi.com/esports_pushurl?user=nalsince&secret=85354e61faa389fc488051eb144f4d89');
-        $result = json_decode( $result, true);
-        //print_r($result);
-        if(isset($result['code']) && $result['code'] == 0){//有数据
-            $data =  $result['data'];
-            $this->createRoom($data,1);
-        }
+//        //单独获取电竟流
+//        $result = $this->curl_get('https://video.open.sportnanoapi.com/esports_pushurl?user=nalsince&secret=85354e61faa389fc488051eb144f4d89');
+//        $result = json_decode( $result, true);
+//        //print_r($result);
+//        if(isset($result['code']) && $result['code'] == 0){//有数据
+//            $data =  $result['data'];
+//            $this->createRoom($data,1);
+//        }
     }
     
     public function getGgscoreStreamData(){
@@ -648,21 +648,23 @@ class livebackController extends HomebaseController {
                 
                 $matchid = $val['match_id'];
                 $one = Db::name('live')->where("match_id={$matchid}")->find();
-                //计算开播数量 目前仅有53个主播
-                $uids = DB::name('live')->where('1=1')->group('uid')->column('uid');
-                $num = count($uids);
-                
-                if(!$one && $num < 200  && $this->getStreamStatus($streamid)){
+
+                if(!$one &&  $this->getStreamStatus($streamid)){
                     $liveClassId = $this->getGameType($val['sport_id']);
                     if($liveClassId == 2){
+                        //计算开播数量 目前仅有53个主播
+                        $num = DB::name('live')->where('liveclassid', $liveClassId)->count();
                         $uid = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id',$matchid)->value('user_ids');
                     }else if($liveClassId == 4){
+                        //计算开播数量 目前仅有53个主播
+                        $num = DB::name('live')->where('liveclassid', $liveClassId)->count();
                         $uid = Db::connect($sportDb)->name('sports_football_match_anchor')->where('match_id',$matchid)->value('user_ids');
                     }else{
                         $uid = 0;
+                        $num = 0;
                     }
 
-                    if($uid){
+                    if($uid && $num < 100){
                         $dataroom = array(
                             "uid" => $uid,
                             "showid" => $val['match_time'],
@@ -911,7 +913,10 @@ class livebackController extends HomebaseController {
             ->field('m.id as match_id, m.match_time, a.user_ids')
             ->where('m.match_time', '>=', $time)
             ->where('m.pushflag',1)
-            ->order('m.id','asc')
+            ->order([
+                'm.id' => 'asc',
+                'm.match_time' => 'asc'
+            ])
             ->select();
 
 
@@ -942,6 +947,10 @@ class livebackController extends HomebaseController {
             Db::connect($sportDb)->name('sports_basketball_match_anchor')->insertAll($insertAll);
         }
 
+
+        $old_time = time()-4*3600;
+        $match_id = Db::connect($sportDb)->name('sports_basketball_match') ->where('m.match_time', '<=', $old_time)->value('id');
+        Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id','<=', $match_id)->delete();
         echo "执行完成";
     }
 
@@ -957,7 +966,10 @@ class livebackController extends HomebaseController {
             ->field('m.id as match_id, m.match_time, a.user_ids')
             ->where('m.match_time', '>=', $time)
             ->where('m.pushflag',1)
-            ->order('m.id','asc')
+            ->order([
+                'm.id' => 'asc',
+                'm.match_time' => 'asc'
+            ])
             ->select();
 
         if($matchList){
@@ -986,6 +998,10 @@ class livebackController extends HomebaseController {
 
             Db::connect($sportDb)->name('sports_football_match_anchor')->insertAll($insertAll);
         }
+
+        $old_time = time()-4*3600;
+        $match_id = Db::connect($sportDb)->name('sports_basketball_match') ->where('m.match_time', '<=', $old_time)->value('id');
+        Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id','<=', $match_id)->delete();
         echo "执行完成";
     }
 
