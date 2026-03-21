@@ -639,6 +639,7 @@ class livebackController extends HomebaseController {
         //$status = [4,6,2,52,1,51,7,18,100];
         $sportDb = config('database.mysql_sport');
         $time = time() - 60;
+        $closeLive = [];
          foreach($data as $key=>$val){
             if($val['pushurl1']){//存在流
                  //获取流id
@@ -649,7 +650,12 @@ class livebackController extends HomebaseController {
                 $matchid = $val['match_id'];
                 $one = Db::name('live')->where("match_id={$matchid}")->find();
 
-                if(!$one &&  $this->getStreamStatus($streamid)){
+                $isLive = $this->getStreamStatus($streamid);
+                if(!$isLive){
+                    $closeLive[] = $matchid;
+                }
+
+                if(!$one &&  $isLive){
                     $liveClassId = $this->getGameType($val['sport_id']);
                     if($liveClassId == 2){
                         //计算开播数量 目前仅有53个主播
@@ -692,7 +698,8 @@ class livebackController extends HomebaseController {
 
                 }
             }
-        }       
+        }
+        DB::name('live')->whereIn('match_id', $closeLive)->delete();
     }
     
 	protected function getRandUid(){
