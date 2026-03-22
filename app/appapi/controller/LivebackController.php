@@ -920,7 +920,7 @@ class livebackController extends HomebaseController {
     function syncBasketballMatchAnchor(){
         $sportDb = config('database.mysql_sport');
         $time = time();
-        $minUid = 992;
+        $minUid = 1041;
         $maxUid = 1092;
         $matchList = Db::connect($sportDb)->name('sports_basketball_match')
             ->alias('m')
@@ -964,7 +964,7 @@ class livebackController extends HomebaseController {
 
 
         $old_time = time()-4*3600;
-        $match_id = Db::connect($sportDb)->name('sports_basketball_match') ->where('m.match_time', '<=', $old_time)->value('id');
+        $match_id = Db::connect($sportDb)->name('sports_basketball_match')->where('match_time', '<=', $old_time)->value('id');
         Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id','<=', $match_id)->delete();
         echo "执行完成";
     }
@@ -974,7 +974,7 @@ class livebackController extends HomebaseController {
         $sportDb = config('database.mysql_sport');
         $time = time();
         $minUid = 892;
-        $maxUid = 991;
+        $maxUid = 1041;
         $matchList = Db::connect($sportDb)->name('sports_football_match')
             ->alias('m')
             ->join('sports_football_match_anchor a','m.id=a.match_id','left')
@@ -1015,7 +1015,7 @@ class livebackController extends HomebaseController {
         }
 
         $old_time = time()-4*3600;
-        $match_id = Db::connect($sportDb)->name('sports_basketball_match') ->where('m.match_time', '<=', $old_time)->value('id');
+        $match_id = Db::connect($sportDb)->name('sports_basketball_match')->where('match_time', '<=', $old_time)->value('id');
         Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id','<=', $match_id)->delete();
         echo "执行完成";
     }
