@@ -116,30 +116,31 @@ class MatchController extends AdminbaseController {
 
         $state = isset($data['state']) ? $data['state']: '';
         if($state!=''){
-            $where[] = ['m.status_id','=',$state];
+            $where[] = ['match_status','=',$state];
         }
 
         $t_name = isset($data['t_name']) ? $data['t_name']: '';
         if($t_name!=''){
-            $where[] = ['t_a.name_zh|t_b.name_zh','like',"%$t_name%"];
+            $where[] = ['home|away','like',"%$t_name%"];
         }
 
         $ename = isset($data['ename']) ? $data['ename']: '';
         if($ename!=''){
-            $where[] = ['e.name_zh','like',"%$ename%"];
+            $where[] = ['comp','like',"%$ename%"];
         }
 
         $match_id = isset($data['match_id']) ? $data['match_id']: '';
         if($match_id !=''){
-            $where[] = ['m.id','=',$match_id];
+            $where[] = ['match_id','=',$match_id];
         }
+
 
         $is_hot = isset($data['is_hot']) ? $data['is_hot']: '';
         if($is_hot!==''){
             if($is_hot == '-1'){
                 $is_hot = 0;
             }
-            $where[] = ['m.is_hot','=',$is_hot];
+            $where[] = ['is_hot','=',$is_hot];
         }
 
         // 今天
@@ -147,38 +148,31 @@ class MatchController extends AdminbaseController {
         // 10天后
         $tenDaysLater = date('Y-m-d', strtotime('+3 days'));
 
-
-
         $start_time=isset($data['start_time']) ? $data['start_time']: $today;
         $end_time=isset($data['end_time']) ? $data['end_time']: $tenDaysLater;
 
+
         if($start_time!=""){
-            $where[]=['m.match_time','>=',strtotime($start_time)];
+            $where[]=['match_time','>=',strtotime($start_time)];
         }
 
         if($end_time!=""){
-            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
+            $where[]=['match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
-        $where[]=['m.pushflag','=','1'];
+        $where[]=['sport_id','=','2'];
 
         $sportDb = config('database.mysql_sport');
-        $lists = Db::connect($sportDb)->name('sports_basketball_match')
-            ->alias('m')
-            ->join('sports_basketball_competition e','m.competition_id=e.id')
-            ->join('sports_basketball_team t_a','m.home_team_id=t_a.id')
-            ->join('sports_basketball_team t_b','m.away_team_id=t_b.id')
-            ->join('sports_basketball_match_anchor a','m.id=a.match_id','left')
-            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot, a.user_ids")
+        $lists = Db::connect($sportDb)->name('sports_3day_match')
             ->where($where)
-            ->order('match_time', 'ASC')
+            ->order('match_time asc')
             ->paginate(20);
 
         $lists->appends($data);
         $page = $lists->render();
         $lists = $lists->toArray();
         foreach ($lists['data'] as $key=>$value){
-            $lists['data'][$key]['status'] = self::$selfBasketballMap[$value['status']];
+            $lists['data'][$key]['status'] = self::$selfBasketballMap[$value['match_status']];
         }
         $this->assign('states',self::$selfBasketballMap);
         $this->assign('lists', $lists['data']);
@@ -194,22 +188,22 @@ class MatchController extends AdminbaseController {
 
         $state = isset($data['state']) ? $data['state']: '';
         if($state!=''){
-            $where[] = ['m.status_id','=',$state];
+            $where[] = ['match_status','=',$state];
         }
 
         $t_name = isset($data['t_name']) ? $data['t_name']: '';
         if($t_name!=''){
-            $where[] = ['t_a.name_zh|t_b.name_zh','like',"%$t_name%"];
+            $where[] = ['home|away','like',"%$t_name%"];
         }
 
         $ename = isset($data['ename']) ? $data['ename']: '';
         if($ename!=''){
-            $where[] = ['e.name_zh','like',"%$ename%"];
+            $where[] = ['comp','like',"%$ename%"];
         }
 
         $match_id = isset($data['match_id']) ? $data['match_id']: '';
         if($match_id !=''){
-            $where[] = ['m.id','=',$match_id];
+            $where[] = ['match_id','=',$match_id];
         }
 
 
@@ -218,7 +212,7 @@ class MatchController extends AdminbaseController {
             if($is_hot == '-1'){
                 $is_hot = 0;
             }
-            $where[] = ['m.is_hot','=',$is_hot];
+            $where[] = ['is_hot','=',$is_hot];
         }
 
         // 今天
@@ -231,31 +225,26 @@ class MatchController extends AdminbaseController {
 
 
         if($start_time!=""){
-            $where[]=['m.match_time','>=',strtotime($start_time)];
+            $where[]=['match_time','>=',strtotime($start_time)];
         }
 
         if($end_time!=""){
-            $where[]=['m.match_time','<=',strtotime($end_time) + 60*60*24 - 1];
+            $where[]=['match_time','<=',strtotime($end_time) + 60*60*24 - 1];
         }
 
-        $where[]=['m.pushflag','=','1'];
+        $where[]=['sport_id','=','1'];
+
         $sportDb = config('database.mysql_sport');
-        $lists = Db::connect($sportDb)->name('sports_football_match')
-            ->alias('m')
-            ->join('sports_football_competition e','m.competition_id=e.id')
-            ->join('sports_football_team t_a','m.home_team_id=t_a.id')
-            ->join('sports_football_team t_b','m.away_team_id=t_b.id')
-            ->join('sports_football_match_anchor a','m.id=a.match_id','left')
-            ->field("m.competition_id,m.id as match_id,m.status_id as status,m.match_time,m.home_team_id as homeId,m.away_team_id as awayId,t_a.name_zh as ta_name,t_b.name_zh as tb_name,t_a.logo as ta_logo,t_b.logo as tb_logo,e.name_zh as cname,e.name_zh as ename, m.is_hot,a.user_ids")
+        $lists = Db::connect($sportDb)->name('sports_3day_match')
             ->where($where)
-            ->order('match_time', 'ASC')
+            ->order('match_time asc')
             ->paginate(20);
 
         $lists->appends($data);
         $page = $lists->render();
         $lists = $lists->toArray();
         foreach ($lists['data'] as $key=>$value){
-            $lists['data'][$key]['status'] = self::$selfFootballMap[$value['status']];
+            $lists['data'][$key]['status'] = self::$selfFootballMap[$value['match_status']];
         }
         $this->assign('states',self::$selfFootballMap);
         $this->assign('lists', $lists['data']);
@@ -389,12 +378,11 @@ class MatchController extends AdminbaseController {
 
         $id     = $this->request->param('id', 0, 'intval');
         $isHot  = $this->request->param('is_hot', 0, 'intval');
-        $table  = $this->request->param('table', '');
 
         if (!$id) $this->error('参数错误');
 
         $sportDb = config('database.mysql_sport');
-        $res = Db::connect($sportDb)->name($table)->where('id', $id)->update(['is_hot' => $isHot]);
+        $res = Db::connect($sportDb)->name('sports_3day_match')->where('id', $id)->update(['is_hot' => $isHot]);
 
         if ($res) {
             $this->success('修改成功');
@@ -412,10 +400,7 @@ class MatchController extends AdminbaseController {
 
 
         $sportDb = config('database.mysql_sport');
-        $data = Db::connect($sportDb)->name('sports_football_match_anchor')->where([
-            'match_id' => $params['match_id'],
-        ])->find();
-
+        $data = Db::connect($sportDb)->name('sports_3day_match')->where('id',$params['id'])->find();
         if($data){
             $params['anchor_id'] = $data['user_ids'];
         }else{
@@ -429,27 +414,16 @@ class MatchController extends AdminbaseController {
 
     public function addFootballAnchorPost()
     {
+        $id     = $this->request->param('id', 0, 'intval');
         $match_id     = $this->request->param('match_id', 0, 'intval');
         $anchor_id  = $this->request->param('anchor_id', '');
 
         if (!$match_id) $this->error('参数错误');
 
         $sportDb = config('database.mysql_sport');
-        $data = Db::connect($sportDb)->name('sports_football_match_anchor')->where([
-            'match_id' => $match_id,
-        ])->find();
-
-        if(!$data){
-            $res = Db::connect($sportDb)->name('sports_football_match_anchor')->insert([
-                'match_id' => $match_id,
-                'user_ids' => $anchor_id,
-            ]);
-        }else{
-            $res = Db::connect($sportDb)->name('sports_football_match_anchor')->where('id', $data['id'])->update([
-                'match_id' => $match_id,
-                'user_ids' => $anchor_id,
-            ]);
-        }
+        $res = Db::connect($sportDb)->name('sports_3day_match')->where('id', $id)->update([
+            'user_ids' => $anchor_id,
+        ]);
 
         if ($res) {
             $this->success('绑定成功',"Match/footballList");
@@ -468,9 +442,7 @@ class MatchController extends AdminbaseController {
 
 
         $sportDb = config('database.mysql_sport');
-        $data = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where([
-            'match_id' => $params['match_id'],
-        ])->find();
+        $data = Db::connect($sportDb)->name('sports_3day_match')->where('id',$params['id'])->find();
 
         if($data){
             $params['anchor_id'] = $data['user_ids'];
@@ -485,27 +457,16 @@ class MatchController extends AdminbaseController {
 
     public function addBasketballAnchorPost()
     {
+        $id     = $this->request->param('id', 0, 'intval');
         $match_id     = $this->request->param('match_id', 0, 'intval');
         $anchor_id  = $this->request->param('anchor_id', '');
 
         if (!$match_id) $this->error('参数错误');
 
         $sportDb = config('database.mysql_sport');
-        $data = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where([
-            'match_id' => $match_id,
-        ])->find();
-
-        if(!$data){
-            $res = Db::connect($sportDb)->name('sports_basketball_match_anchor')->insert([
-                'match_id' => $match_id,
-                'user_ids' => $anchor_id,
-            ]);
-        }else{
-            $res = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('id', $data['id'])->update([
-                'match_id' => $match_id,
-                'user_ids' => $anchor_id,
-            ]);
-        }
+        $res = Db::connect($sportDb)->name('sports_3day_match')->where('id', $id)->update([
+            'user_ids' => $anchor_id,
+        ]);
 
         if ($res) {
             $this->success('绑定成功',"Match/basketballList");

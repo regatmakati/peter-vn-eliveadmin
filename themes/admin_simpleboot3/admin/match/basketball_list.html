@@ -41,55 +41,54 @@
 
 
 			<input type="submit" class="btn btn-primary" style="margin-left: 10px;" value="查询">
-		</form>		
+		</form>
 		<form method="post" class="js-ajax-form" >
 			<table class="table table-hover table-bordered">
 				<thead>
-					<tr>
-						<th>所属游戏</th>
-						<th>赛事ID</th>
-						<th>赛事名称</th>
-						<th>A战队</th>
-						<th>B战队</th>
-						<th>比赛状态</th>
-						<th>是否热门</th>
-						<th>比赛时间</th>
-						<th>关联主播</th>
-						<!--						<th>总人数</th>-->
-						<!--						<th>直播流</th>-->
-						<th>操作</th>
-					</tr>
+				<tr>
+					<th>所属游戏</th>
+					<th>ID</th>
+					<th>赛事ID</th>
+					<th>赛事名称</th>
+					<th>A战队</th>
+					<th>B战队</th>
+					<th>比赛状态</th>
+					<th>是否热门</th>
+					<th>比赛时间</th>
+					<th>关联主播</th>
+					<!--						<th>总人数</th>-->
+					<th>操作</th>
+				</tr>
 				</thead>
 				<tbody>
-					<foreach name="lists" item="vo">
+				<foreach name="lists" item="vo">
 					<tr>
 						<td>蓝球比赛</td>
+						<td>{$vo['id']}</td>
 						<td>{$vo['match_id']}</td>
-						<td>{$vo['ename']} </td>
-						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['ta_logo']}" alt="">&nbsp;&nbsp;{$vo['ta_name']}</td>
-						<td><img style="max-width: 40px;max-height: 40px;" src="{$vo['tb_logo']}" alt="">&nbsp;&nbsp;{$vo['tb_name']}</td>
+						<td>{$vo['comp']} </td>
+						<td>&nbsp;&nbsp;{$vo['home']}</td>
+						<td>&nbsp;{$vo['away']}</td>
 						<td>
-							{$vo.status}
+							{$vo.match_status}
+
 						</td>
 						<td>
 
 							<if condition="$vo.is_hot eq 1">
-								<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'table'=>'sports_basketball_match','is_hot'=>0])}" class="js-ajax-hot">取消热门</a>
+								<a href="{:url('Match/changeHot',['id'=>$vo['id'],'is_hot'=>0])}" class="js-ajax-hot">取消热门</a>
 								<else />
-								<a href="{:url('Match/changeHot',['id'=>$vo['match_id'],'table'=>'sports_basketball_match','is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
+								<a href="{:url('Match/changeHot',['id'=>$vo['id'],'is_hot'=>1])}" class="js-ajax-hot">设为热门</a>
 							</if>
 						</td>
 						<td>{:date('Y-m-d H:i:s',$vo['match_time'])}</td>
 						<td>{$vo['user_ids']}</td>
-						<!--						<td>{:getSportsAllPeople($vo['homeId'],$vo['awayId'],'sports_football_player')}</td>-->
-						<!--						<td>-->
-						<!--							<a class="btn btn-xs btn-info liveurl" data-id="{$vo['match_id']}" >直播链接</a>-->
-						<!--						</td>-->
+
 						<td>
-							<a href="{:url('Match/addBasketballAnchor',['match_id'=>$vo['match_id'],'ename'=>$vo['ename'],'ta_name'=>$vo['ta_name'],'tb_name'=>$vo['tb_name']])}" class="btn btn-xs btn-primary">绑定主播</a>
+							<a href="{:url('Match/addFootballAnchor',['id'=>$vo['id'],'match_id'=>$vo['match_id'],'ename'=>$vo['comp'],'ta_name'=>$vo['home'],'tb_name'=>$vo['away']])}" class="btn btn-xs btn-primary">绑定主播</a>
 						</td>
 					</tr>
-					</foreach>
+				</foreach>
 				</tbody>
 			</table>
 			<div class="pagination">{$page}</div>
