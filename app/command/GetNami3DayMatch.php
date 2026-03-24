@@ -33,17 +33,7 @@ class GetNami3DayMatch extends Command
 
     protected function insertNami3DayMatch($data){
         $sportDb = config('database.mysql_sport');
-
-        $minUid = 892;
-        $maxUid = 1092;
-        $lastUserIds =  Db::connect($sportDb)->name('sports_3day_match')->order('id','desc')->limit(1)->value('user_ids');
-        if(!$lastUserIds){
-            $lastUserIds = $minUid;
-        }
-
-
         $match_ids = [];
-
         foreach ($data as $v){
             $in = [
                 'sport_id' => $v['sport_id'],
@@ -65,7 +55,6 @@ class GetNami3DayMatch extends Command
             ])->find();
 
             if($one){
-
                 $in['updated_at'] = date("Y-m-d H:i:s");
                 $res = Db::connect($sportDb)->name('sports_3day_match')->where('id', $one['id'])->update($in);
 
@@ -75,13 +64,8 @@ class GetNami3DayMatch extends Command
                     echo "【更新】 72小时内的数据失败, match_id:{$v['match_id']}\n\n";
                 }
             }else{
-                if($lastUserIds == $maxUid){
-                    $lastUserIds = $minUid;
-                }
-                $in['user_ids'] = $lastUserIds;
                 $in['created_at'] = date("Y-m-d H:i:s");
                 $in['updated_at'] = date("Y-m-d H:i:s");
-                $lastUserIds++;
                 $res = Db::connect($sportDb)->name('sports_3day_match')->insert($in);
 
                 if($res){
@@ -98,7 +82,43 @@ class GetNami3DayMatch extends Command
 
         Db::connect($sportDb)->name('sports_3day_match')->whereNotIn('match_id',$match_ids)->delete();
 
+        $this->setAnchor();
     }
+
+    protected function setAnchor(){
+        $sportDb = config('database.mysql_sport');
+
+        $minUid = 892;
+        $maxUid = 1092;
+        $lastUserIds =  Db::connect($sportDb)->name('sports_3day_match')->order(['match_time'=>'desc','id'=>'desc'])->limit(1)->value('user_ids');
+        if(!$lastUserIds){
+            $lastUserIds = $minUid;
+        }
+
+        $data = Db::connect($sportDb)->name('sports_3day_match')->where('user_ids = ""')->order(['match_time'=>'asc','id'=>'asc'])->select();
+        foreach ($data as $v){
+            if($lastUserIds > $maxUid){
+                $lastUserIds = $minUid;
+            }
+            $in['user_ids'] = $lastUserIds;
+            $in['updated_at'] = date("Y-m-d H:i:s");
+            $res = Db::connect($sportDb)->name('sports_3day_match')->where('id', $v['id'])->update($in);
+
+            if($res){
+                echo "【更新】 72小时内的数据成功, match_id:{$v['match_id']}\n\n";
+            }else{
+                echo "【更新】 72小时内的数据失败, match_id:{$v['match_id']}\n\n";
+            }
+
+            $lastUserIds++;
+
+        }
+
+
+    }
+
+
+
 
 
 
