@@ -37,24 +37,25 @@ class GgsportsyncController extends HomebaseController {
 						// Db::name('varchar_match')->where("match_id='$match_id'")->update(['end_time' => $time]);
 					// }
 
-                    $match_id = $val['match_id'];
-                    switch ($val['liveclassid']){
-                        case 2:  // 篮球
-                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->value('user_ids');
-                            break;
-                        case 4:  // 足球
-                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->value('user_ids');
-                            break;
-                        default:
-                            $user_id = 0;
-                            break;
 
-                    }
-
-                    if(!$user_id){
-                        continue;
-                    }
-                    $val['room_id'] = $user_id;
+//                    $match_id = $val['match_id'];
+//                    switch ($val['liveclassid']){
+//                        case 2:  // 篮球
+//                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->value('user_ids');
+//                            break;
+//                        case 4:  // 足球
+//                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->value('user_ids');
+//                            break;
+//                        default:
+//                            $user_id = 0;
+//                            break;
+//
+//                    }
+//
+//                    if(!$user_id){
+//                        continue;
+//                    }
+//                    $val['room_id'] = $user_id;
 					//加入无人值守直播间
 					$one = Db::name('live')->where("uid = '{$val['room_id']}'")->find();
 					$dataroom = array(

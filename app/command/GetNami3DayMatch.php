@@ -82,7 +82,7 @@ class GetNami3DayMatch extends Command
 
         Db::connect($sportDb)->name('sports_3day_match')->whereNotIn('match_id',$match_ids)->delete();
 
-        $this->setAnchor();
+//        $this->setAnchor();
     }
 
     protected function setAnchor(){
