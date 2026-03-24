@@ -37,8 +37,7 @@ class GgsportsyncController extends HomebaseController {
 						// Db::name('varchar_match')->where("match_id='$match_id'")->update(['end_time' => $time]);
 					// }
 
-
-//                    $match_id = $val['match_id'];
+                    $match_id = $val['match_id'];
 //                    switch ($val['liveclassid']){
 //                        case 2:  // 篮球
 //                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->value('user_ids');
