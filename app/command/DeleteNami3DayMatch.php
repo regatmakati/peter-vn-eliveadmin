@@ -35,7 +35,7 @@ class DeleteNami3DayMatch extends Command
             ->whereIn('match_status',[0,8,12])
             ->where('sport_id',1)
             ->where("match_time < {$nowDate}")
-            ->delete;
+            ->delete();
         echo "删除昨天已经结束的足球比赛成功\n\n";
 
     }
@@ -50,7 +50,7 @@ class DeleteNami3DayMatch extends Command
             ->whereIn('match_status',[0,10,12])
             ->where('sport_id',2)
             ->where("match_time < {$nowDate}")
-            ->delete;
+            ->delete();
         echo "删除昨天已经结束的篮球比赛成功\n\n";
 
     }
