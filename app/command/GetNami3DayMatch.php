@@ -62,22 +62,34 @@ class GetNami3DayMatch extends Command
             ])->find();
 
             if($one){
+
+                $in['updated_at'] = date("Y-m-d H:i:s");
                 $res = Db::connect($sportDb)->name('sports_3day_match')->where('id', $one['id'])->update($in);
+
+                if($res){
+                    echo "【更新】 72小时内的数据成功, match_id:{$v['match_id']}\n\n";
+                }else{
+                    echo "【更新】 72小时内的数据失败, match_id:{$v['match_id']}\n\n";
+                }
             }else{
                 if($lastUserIds == $maxUid){
                     $lastUserIds = $minUid;
                 }
                 $in['user_ids'] = $lastUserIds;
+                $in['created_at'] = date("Y-m-d H:i:s");
+                $in['updated_at'] = date("Y-m-d H:i:s");
                 $lastUserIds++;
                 $res = Db::connect($sportDb)->name('sports_3day_match')->insert($in);
 
+                if($res){
+                    echo "【插入】 72小时内的数据成功, match_id:{$v['match_id']}\n\n";
+                }else{
+                    echo "【插入】 72小时内的数据失败, match_id:{$v['match_id']}\n\n";
+                }
+
             }
 
-            if($res){
-                echo "插入72小时内的数据成功, match_id:{$v['match_id']}\n\n";
-            }else{
-                echo "插入72小时内的数据失败, match_id:{$v['match_id']}\n\n";
-            }
+
         }
 
     }
