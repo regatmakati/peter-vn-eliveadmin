@@ -83,7 +83,16 @@ class GgsportsyncController extends HomebaseController {
 					}else{
 						DB::name('live')->insertGetId($dataroom);
 					}
-										
+
+                    if($val['liveclassid'] == 2){
+                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->update([
+                            'user_ids' => $val['room_id']
+                        ]);
+                    }else{
+                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->update([
+                            'user_ids' => $val['room_id']
+                        ]);
+                    }
 				}
 				//Db::name('varchar_match')->where("end_time != '$time'")->delete();
 				Db::name('live')->where("showid != '$time' and isvideo=1")->delete();
