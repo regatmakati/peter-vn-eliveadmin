@@ -41,6 +41,9 @@ class GetNami3DayMatch extends Command
             $lastUserIds = $minUid;
         }
 
+
+        $match_ids = [];
+
         foreach ($data as $v){
             $in = [
                 'sport_id' => $v['sport_id'],
@@ -89,8 +92,11 @@ class GetNami3DayMatch extends Command
 
             }
 
+            $match_ids[] = $v['match_id'];
 
         }
+
+        Db::connect($sportDb)->name('sports_3day_match')->whereNotIn('match_id',$match_ids)->delete();
 
     }
 
