@@ -11,33 +11,13 @@ class GgsportsyncController extends HomebaseController {
 
 	function sync(){
 		$time = time() + 4 * 3600;
-		$data = json_decode(Post('','https://admin.gogosports.live/appapi/ggsport/list?app_id=no3qm09xc1i3b1m4&app_secret=de2316eb58434561a450ab2e915e4e17'),true);
+		$data = json_decode(Post('','https://admin.gogosports.live/appapi/ggsport/list?app_id=no3qm09xc1i3b1m4&app_secret=de2316eb58434561a450ab2e915e4e17&lang=en'),true);
 		if(isset($data['status']) && $data['status'] == '0'){
 			$list = $data['data']['list'];
 			if($list){
                 $sportDb = config('database.mysql_sport');
 
 				foreach($list as $key => $val){
-					$match_id = $val['match_id'];
-                    switch ($val['liveclassid']){
-                        case 2:  // 篮球
-                            $user_id = Db::connect($sportDb)->name('sports_basketball_match_anchor')->where('match_id', $match_id)->value('user_ids');
-                            break;
-                        case 4:  // 足球
-                            $user_id = Db::connect($sportDb)->name('sports_football_match_anchor')->where('match_id', $match_id)->value('user_ids');
-                            break;
-                        default:
-                            $user_id = 0;
-                            break;
-
-                    }
-
-                    if(!$user_id){
-                        continue;
-                    }
-
-                    $val['room_id'] = $user_id;
-
 					// $one = Db::name('varchar_match')->where("match_id='$match_id'")->find();
 					// if(!$one){
 						// $arr = array(
@@ -56,8 +36,25 @@ class GgsportsyncController extends HomebaseController {
 					// }else{
 						// Db::name('varchar_match')->where("match_id='$match_id'")->update(['end_time' => $time]);
 					// }
-					
-					print_r($val);
+
+                    $match_id = $val['match_id'];
+                    switch ($val['liveclassid']){
+                        case 2:  // 篮球
+                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->value('user_ids');
+                            break;
+                        case 4:  // 足球
+                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->value('user_ids');
+                            break;
+                        default:
+                            $user_id = 0;
+                            break;
+
+                    }
+
+                    if(!$user_id){
+                        continue;
+                    }
+                    $val['room_id'] = $user_id;
 					//加入无人值守直播间
 					$one = Db::name('live')->where("uid = '{$val['room_id']}'")->find();
 					$dataroom = array(
