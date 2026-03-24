@@ -12,4 +12,6 @@
 
 return [
     'app\command\GetNami3DayMatch',
+    'app\command\DeleteNami3DayMatch',
+    'app\command\Test',
 ];
