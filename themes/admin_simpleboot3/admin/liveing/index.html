@@ -14,6 +14,9 @@
 			关键字：
             <input class="form-control" type="text" name="uid" style="width: 200px;" value="{:input('request.uid')}"
                    placeholder="请输入会员ID、靓号">
+			比赛信息：
+			<input class="form-control" type="text" name="team" style="width: 200px;" value="{:input('request.team')}"
+				   placeholder="请输入球队名称">
 			<input type="submit" class="btn btn-primary" value="搜索">
 		</form>		
 		<form method="post" class="js-ajax-form" action="{:url('Liveing/listOrder')}">
@@ -38,6 +41,7 @@
 						<th>安卓</th>
 						<th>IOS</th>
 						<th>累计人数</th>
+						<th>比赛信息</th>
 						<th>播流地址</th>
 						<th>推荐排序</th>
 						<th>设备信息</th>
@@ -60,6 +64,7 @@
 						<td>{$vo['androidnums']}</td>
 						<td>{$vo['iosnums']}</td>
 						<td>{$vo['nums']}</td>
+						<td style="width: 200px">{$vo['home']} vs {$vo['away']}</td>
                         <td>{$vo.pull|mb_substr=0,50}<label onclick="alert('{$vo.pull}');">...</label></td>
 						<td><input name="recom_sorts[{$vo.uid}]" class="input-order" type="text"  value="{$vo.recom_sort}"></td>
                         <td>{$vo['deviceinfo']}</td>
