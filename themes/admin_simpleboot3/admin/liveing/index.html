@@ -33,6 +33,7 @@
 						<th>直播ID</th>
 						<th>直播开始时间</th>
 						<th>直播分类</th>
+						<th>比赛信息</th>
 						<th>房间类型</th>
 						<th>视频类型</th>
 						<th>在线总人数</th>
@@ -41,7 +42,7 @@
 						<th>安卓</th>
 						<th>IOS</th>
 						<th>累计人数</th>
-						<th>比赛信息</th>
+
 						<th>播流地址</th>
 						<th>推荐排序</th>
 						<th>设备信息</th>
@@ -56,6 +57,7 @@
 						<td>{$vo['showid']}</td>
 						<td>{:date('Y-m-d H:i',$vo['starttime'])}</td>
 						<td>{$liveclass[$vo['liveclassid']]}</td>
+						<td style="width: 200px">{$vo['home']} vs {$vo['away']}</td>
 						<td>{$type[$vo['type']]}</td>
 						<td><if condition="$vo['anyway'] eq 0">竖屏<else/>横屏</if></td>
 						<td>{$vo['allnums']}</td>
@@ -64,7 +66,6 @@
 						<td>{$vo['androidnums']}</td>
 						<td>{$vo['iosnums']}</td>
 						<td>{$vo['nums']}</td>
-						<td style="width: 200px">{$vo['home']} vs {$vo['away']}</td>
                         <td>{$vo.pull|mb_substr=0,50}<label onclick="alert('{$vo.pull}');">...</label></td>
 						<td><input name="recom_sorts[{$vo.uid}]" class="input-order" type="text"  value="{$vo.recom_sort}"></td>
                         <td>{$vo['deviceinfo']}</td>
