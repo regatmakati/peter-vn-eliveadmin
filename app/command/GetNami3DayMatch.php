@@ -22,7 +22,7 @@ class GetNami3DayMatch extends Command
 
         $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=nalsince&secret=85354e61faa389fc488051eb144f4d89');
         $result = json_decode( $result, true);
-        //print_r($result);
+        $output->writeln("拉取纳米数据：".json_encode($result));
         if(isset($result['code']) && $result['code'] == 0){//有数据
             $data =  $result['data'];
             $this->insertNami3DayMatch($data);
