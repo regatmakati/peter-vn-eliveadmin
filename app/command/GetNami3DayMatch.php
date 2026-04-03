@@ -20,7 +20,7 @@ class GetNami3DayMatch extends Command
     protected function execute(Input $input, Output $output)
     {
 
-        $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=nalsince&secret=85354e61faa389fc488051eb144f4d89');
+        $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=whftlx&secret=f40e481a8ca6d088b316d2a2986163ea');
         $result = json_decode( $result, true);
         $output->writeln("拉取纳米数据：".json_encode($result,256));
         if(isset($result['code']) && $result['code'] == 0){//有数据
