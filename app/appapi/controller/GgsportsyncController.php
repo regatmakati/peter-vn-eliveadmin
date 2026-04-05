@@ -76,12 +76,12 @@ class GgsportsyncController extends HomebaseController {
 						"pkstream" => '',
 						"banker_coin" => 10000000,
 						"notice" => '添加下方主播联系方式获取红单',
-						"match_id" => $match_id,
-						"add_time" => time()
+						"match_id" => $match_id
 					);
 					if($one){
 						DB::name('live')->where("uid = '{$val['room_id']}'")->update($dataroom);
 					}else{
+                        $dataroom['add_time'] = time();
 						DB::name('live')->insertGetId($dataroom);
 					}
 
