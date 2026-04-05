@@ -76,7 +76,8 @@ class GgsportsyncController extends HomebaseController {
 						"pkstream" => '',
 						"banker_coin" => 10000000,
 						"notice" => '添加下方主播联系方式获取红单',
-						"match_id" => $match_id
+						"match_id" => $match_id,
+						"add_time" => time()
 					);
 					if($one){
 						DB::name('live')->where("uid = '{$val['room_id']}'")->update($dataroom);
@@ -85,11 +86,11 @@ class GgsportsyncController extends HomebaseController {
 					}
 
                     if($val['liveclassid'] == 2){
-                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->update([
+                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->where('user_ids', '')->update([
                             'user_ids' => $val['room_id']
                         ]);
                     }else{
-                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->update([
+                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->where('user_ids', '')->update([
                             'user_ids' => $val['room_id']
                         ]);
                     }
