@@ -32,6 +32,7 @@
 						<th>会员昵称</th>
 						<th>直播ID</th>
 						<th>直播开始时间</th>
+						<th>开播时间</th>
 						<th>直播分类</th>
 						<th>比赛信息</th>
 						<th>房间类型</th>
@@ -56,6 +57,7 @@
 						<td>{$vo['userinfo']['user_nicename']} </td>
 						<td>{$vo['showid']}</td>
 						<td>{:date('Y-m-d H:i',$vo['starttime'])}</td>
+						<td>{:date('Y-m-d H:i:s',$vo['add_time'])}</td>
 						<td>{$liveclass[$vo['liveclassid']]}</td>
 						<td style="width: 200px">{$vo['home']} vs {$vo['away']}</td>
 						<td>{$type[$vo['type']]}</td>
