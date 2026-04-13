@@ -74,6 +74,13 @@ class GetNami3DayMatch extends Command
                     echo "【插入】 72小时内的数据失败, match_id:{$v['match_id']}\n\n";
                 }
 
+                $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insert([
+                    'sport_id' => $v['sport_id'],
+                    'match_id' => $v['match_id'],
+                    'is_hot' => 0,
+                    'user_ids' => '',
+                ]);
+
             }
 
             $match_ids[] = $v['match_id'];
@@ -81,6 +88,7 @@ class GetNami3DayMatch extends Command
         }
 
         Db::connect($sportDb)->name('sports_3day_match')->whereNotIn('match_id',$match_ids)->delete();
+        Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->whereNotIn('match_id',$match_ids)->delete();
 
 //        $this->setAnchor();
     }
