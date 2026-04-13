@@ -86,11 +86,11 @@ class GgsportsyncController extends HomebaseController {
 					}
 
                     if($val['liveclassid'] == 2){
-                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->where('user_ids', '')->update([
+                        Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->where('sport_id', 2)->where('user_ids', '')->update([
                             'user_ids' => $val['room_id']
                         ]);
                     }else{
-                        Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->where('user_ids', '')->update([
+                        Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->where('sport_id', 1)->where('user_ids', '')->update([
                             'user_ids' => $val['room_id']
                         ]);
                     }
