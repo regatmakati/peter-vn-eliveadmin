@@ -127,6 +127,7 @@
 				$.post(url, {}, function(res){
 					if(res.code == 1){
 						that.text(that.text() === '设为热门' ? '取消热门' : '设为热门');
+						location.reload(); // 刷新当前页面
 					} else {
 						alert(res.msg);
 					}
