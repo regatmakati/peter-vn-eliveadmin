@@ -34,6 +34,7 @@ class GetNami3DayMatch extends Command
     protected function insertNami3DayMatch($data){
         $sportDb = config('database.mysql_sport');
         $match_ids = [];
+        $anchorInsert = [];
         foreach ($data as $v){
             $in = [
                 'sport_id' => $v['sport_id'],
@@ -74,12 +75,12 @@ class GetNami3DayMatch extends Command
                     echo "【插入】 72小时内的数据失败, match_id:{$v['match_id']}\n\n";
                 }
 
-                $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insert([
+                $anchorInsert[] = [
                     'sport_id' => $v['sport_id'],
                     'match_id' => $v['match_id'],
                     'is_hot' => 0,
                     'user_ids' => '',
-                ]);
+                ];
 
             }
 
@@ -89,9 +90,19 @@ class GetNami3DayMatch extends Command
 
         Db::connect($sportDb)->name('sports_3day_match')->whereNotIn('match_id',$match_ids)->delete();
         Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->whereNotIn('match_id',$match_ids)->delete();
+        $this->insertAnchor($anchorInsert);
 
 //        $this->setAnchor();
     }
+
+    protected function  insertAnchor($anchorInsert)
+    {
+        $sportDb = config('database.mysql_sport');
+
+        $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insertAll($anchorInsert);
+        $res = Db::connect($sportDb)->name('sports_3day_match_anchor_huas')->insertAll($anchorInsert);
+    }
+
 
     protected function setAnchor(){
         $sportDb = config('database.mysql_sport');
