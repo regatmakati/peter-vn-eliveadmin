@@ -388,7 +388,19 @@ class MatchController extends AdminbaseController {
         if (!$match_id) $this->error('参数错误');
 
         $sportDb = config('database.mysql_sport');
-        $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->update(['is_hot' => $isHot]);
+        $one = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->find();
+        if($one){
+            $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->update([
+                'is_hot' => $isHot,
+            ]);
+        }else{
+            $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insert([
+                'sport_id' => 2,
+                'match_id' => $match_id,
+                'is_hot' => 0,
+                'user_ids' => '',
+            ]);
+        }
 
         if ($res) {
             $this->success('修改成功');
@@ -432,9 +444,20 @@ class MatchController extends AdminbaseController {
         if (!$match_id) $this->error('参数错误');
 
         $sportDb = config('database.mysql_sport');
-        $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->update([
-            'user_ids' => $anchor_id,
-        ]);
+        $one = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->find();
+        if($one){
+            $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->update([
+                'user_ids' => $anchor_id,
+            ]);
+        }else{
+            $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insert([
+                'sport_id' => 1,
+                'match_id' => $match_id,
+                'is_hot' => 0,
+                'user_ids' => $anchor_id,
+            ]);
+        }
+
 
         if ($res) {
             $this->success('绑定成功',"Match/footballList");
@@ -480,9 +503,19 @@ class MatchController extends AdminbaseController {
         if (!$match_id) $this->error('参数错误');
 
         $sportDb = config('database.mysql_sport');
-        $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->update([
-            'user_ids' => $anchor_id,
-        ]);
+        $one = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->find();
+        if($one){
+            $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->where('match_id', $match_id)->update([
+                'user_ids' => $anchor_id,
+            ]);
+        }else{
+            $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insert([
+                'sport_id' => 2,
+                'match_id' => $match_id,
+                'is_hot' => 0,
+                'user_ids' => $anchor_id,
+            ]);
+        }
 
         if ($res) {
             $this->success('绑定成功',"Match/basketballList");
