@@ -14,7 +14,7 @@ class GetNami3DayMatch extends Command
         // 指令配置
         $this->setName('getNami3DayMatch');
         // 设置参数
-        
+
     }
 
     protected function execute(Input $input, Output $output)
@@ -22,7 +22,7 @@ class GetNami3DayMatch extends Command
 
         $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=whftlx&secret=f40e481a8ca6d088b316d2a2986163ea');
         $result = json_decode( $result, true);
-        $output->writeln("拉取纳米数据：".json_encode($result,256));
+        // $output->writeln("拉取纳米数据：".json_encode($result,256));
         if(isset($result['code']) && $result['code'] == 0){//有数据
             $data =  $result['data'];
             $this->insertNami3DayMatch($data);
@@ -36,6 +36,12 @@ class GetNami3DayMatch extends Command
         $match_ids = [];
         $anchorInsert = [];
         foreach ($data as $v){
+
+            if(!in_array($v['sport_id'],[1,2])){
+                continue;
+            }
+
+
             $in = [
                 'sport_id' => $v['sport_id'],
                 'match_id' => $v['match_id'],
@@ -69,6 +75,8 @@ class GetNami3DayMatch extends Command
                 $in['updated_at'] = date("Y-m-d H:i:s");
                 $res = Db::connect($sportDb)->name('sports_3day_match')->insert($in);
 
+
+
                 if($res){
                     echo "【插入】 72小时内的数据成功, match_id:{$v['match_id']}\n\n";
                 }else{
@@ -82,26 +90,50 @@ class GetNami3DayMatch extends Command
                     'user_ids' => '',
                 ];
 
+
+
             }
+
 
             $match_ids[] = $v['match_id'];
 
         }
 
         Db::connect($sportDb)->name('sports_3day_match')->whereNotIn('match_id',$match_ids)->delete();
+
         Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->whereNotIn('match_id',$match_ids)->delete();
-        $this->insertAnchor($anchorInsert);
+
+
+        if($anchorInsert){
+            $this->insertAnchor($anchorInsert);
+        }
+
 
 //        $this->setAnchor();
+
+
     }
+
 
     protected function  insertAnchor($anchorInsert)
     {
         $sportDb = config('database.mysql_sport');
 
-        $res = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insertAll($anchorInsert);
-        $res = Db::connect($sportDb)->name('sports_3day_match_anchor_huas')->insertAll($anchorInsert);
+        $res1 = Db::connect($sportDb)->name('sports_3day_match_anchor_vn')->insertAll($anchorInsert);
+        if($res1){
+            echo "【插入 vn】 anchorInsert 数据成功\n\n";
+        }else{
+            echo "【插入 vn】 anchorInsert 数据失败\n\n";
+        }
+        $res2 = Db::connect($sportDb)->name('sports_3day_match_anchor_huas')->insertAll($anchorInsert);
+        if($res2){
+            echo "【插入 huas】 anchorInsert 数据成功\n\n";
+        }else{
+            echo "【插入 huas】 anchorInsert 数据失败\n\n";
+        }
     }
+
+
 
 
     protected function setAnchor(){
