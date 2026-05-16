@@ -305,11 +305,14 @@ class LiveingController extends AdminbaseController
 	
     function index()
     {
+        $sportDb = config('database.mysql_sport');
+
         $data = $this->request->param();
         $map = [];
         $map[] = ['islive', '=', 1];
         $start_time = isset($data['start_time']) ? $data['start_time'] : '';
         $end_time = isset($data['end_time']) ? $data['end_time'] : '';
+        $team = isset($data['team']) ? $data['team'] : '';
 
         if ($start_time != "") {
             $map[] = ['starttime', '>=', strtotime($start_time)];
@@ -331,13 +334,30 @@ class LiveingController extends AdminbaseController
 
         $this->configpri = getConfigPri();
 
+        if ($team != "") {
+            $matchList = Db::connect($sportDb)->name('sports_3day_match')
+                ->field('match_id')
+                ->whereLike('home|away', "%{$team}%")
+                ->select();
+
+//            print_r(Db::connect($sportDb)->name('sports_3day_match')->getLastSql());
+
+            if($matchList){
+                $matchIds = array_column($matchList,'match_id');
+                $map[] = ['match_id', 'in', $matchIds];
+            }
+        }
+
+
 
         $lists = Db::name("live")
             ->where($map)
             ->order("starttime DESC")
             ->paginate(20);
 
-        $lists->each(function ($v, $k) {
+//        print_r(Db::name("live")->getLastSql());die;
+
+        $lists->each(function ($v, $k) use ($sportDb) {
 
             $v['userinfo'] = getUserInfo($v['uid']);
             $where = [];
@@ -387,6 +407,23 @@ class LiveingController extends AdminbaseController
                 $v['pull'] = PrivateKeyA('rtmp', $v['stream'], 0);
             }
 
+            if($v['liveclassid'] == 4){
+                $sport_id = 1;
+            }else{
+                $sport_id = 2;
+            }
+
+            $matchInfo = Db::connect($sportDb)->name('sports_3day_match')
+                ->field('comp,home,away')
+                ->where([
+                    'match_id' =>$v['match_id'],
+                    'sport_id' =>$sport_id
+                ])
+                ->find();
+
+            $v['comp'] = $matchInfo['comp'] ?? "";
+            $v['home'] = $matchInfo['home'] ?? "";
+            $v['away'] = $matchInfo['away'] ?? "";
             return $v;
         });
 
