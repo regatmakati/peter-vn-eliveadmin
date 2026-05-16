@@ -20,7 +20,7 @@ class GetNami3DayMatch extends Command
     protected function execute(Input $input, Output $output)
     {
 
-        $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=nalsince&secret=85354e61faa389fc488051eb144f4d89');
+        $result = $this->curl_get('https://video.open.sportnanoapi.com/pushurl_v4?user=naoabdeeed&secret=14af6e1cf70a4a29b966e59e198f7f03');
         $result = json_decode( $result, true);
         //print_r($result);
         if(isset($result['code']) && $result['code'] == 0){//有数据

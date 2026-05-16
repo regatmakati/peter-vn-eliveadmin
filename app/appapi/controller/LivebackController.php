@@ -922,6 +922,17 @@ class livebackController extends HomebaseController {
                 if(!$this->getStreamStatus($v['stream'])){
                     $res = Db::name('live')->where('uid', $v['uid'])->delete();
                     if($res){
+//                        $uid = $v['uid'];
+//                        $redis = connectionRedis();
+//                        $redis->hDel("livelist",$uid);
+//                        $redis->del($uid.'_zombie');
+//                        $redis->del($uid.'_zombie_uid');
+//                        $redis->del('attention_'.$uid);
+//                        $redis->del('roomNum_pc_'.$uid);
+//                        $redis->del('roomNum_h5_'.$uid);
+//                        $redis->del('roomNum_android_'.$uid);
+//                        $redis->del('roomNum_ios_'.$uid);
+
                         echo "删除已结束的直播间成功, uid:{$v['uid']} \n\n";
                     }else{
                         echo "删除已结束的直播间失败, uid:{$v['uid']}\n\n";
