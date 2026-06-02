@@ -12,6 +12,7 @@ class GgsportsyncController extends HomebaseController {
 	function sync(){
 		$time = time() + 4 * 3600;
 		$data = json_decode(Post('','https://admin.gogosports.live/appapi/ggsport/list?app_id=no3qm09xc1i3b1m4&app_secret=de2316eb58434561a450ab2e915e4e17&lang=en'),true);
+
 		if(isset($data['status']) && $data['status'] == '0'){
 			$list = $data['data']['list'];
 			if($list){
@@ -39,6 +40,9 @@ class GgsportsyncController extends HomebaseController {
 
                     $match_id = $val['match_id'];
 
+                    if(!in_array($val['liveclassid'],[2,4]) ){
+                        continue;
+                    }
 
                     switch ($val['liveclassid']){
                         case 2:  // 篮球
@@ -49,7 +53,7 @@ class GgsportsyncController extends HomebaseController {
                                 ->leftJoin('sports_football_competition c','m.competition_id=c.id')
                                 ->leftJoin('sports_football_team h','m.home_team_id=h.id')
                                 ->leftJoin('sports_football_team a','m.away_team_id=a.id')
-                                ->where("m.match_id='$match_id'")
+                                ->where("m.id='$match_id'")
                                 ->find();
 
                             break;
@@ -60,7 +64,7 @@ class GgsportsyncController extends HomebaseController {
                                 ->leftJoin('sports_football_competition c','m.competition_id=c.id')
                                 ->leftJoin('sports_football_team h','m.home_team_id=h.id')
                                 ->leftJoin('sports_football_team a','m.away_team_id=a.id')
-                                ->where("m.match_id='$match_id'")
+                                ->where("m.id='$match_id'")
                                 ->find();
 
                             break;
