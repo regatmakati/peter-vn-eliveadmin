@@ -38,18 +38,44 @@ class GgsportsyncController extends HomebaseController {
 					// }
 
                     $match_id = $val['match_id'];
-//                    switch ($val['liveclassid']){
-//                        case 2:  // 篮球
-//                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 2)->value('user_ids');
-//                            break;
-//                        case 4:  // 足球
-//                            $user_id = Db::connect($sportDb)->name('sports_3day_match')->where('match_id', $match_id)->where('sport_id', 1)->value('user_ids');
-//                            break;
-//                        default:
-//                            $user_id = 0;
-//                            break;
-//
-//                    }
+
+
+                    switch ($val['liveclassid']){
+                        case 2:  // 篮球
+
+                            $one = Db::connect($sportDb)->name('sports_football_match')
+                                ->alias('m')
+                                ->field('c.short_name_en as competition_name,h.short_name_en as home_name, a.short_name_en as away_name')
+                                ->leftJoin('sports_football_competition c','m.competition_id=c.id')
+                                ->leftJoin('sports_football_team h','m.home_team_id=h.id')
+                                ->leftJoin('sports_football_team a','m.away_team_id=a.id')
+                                ->where("m.match_id='$match_id'")
+                                ->find();
+
+                            break;
+                        case 4:  // 足球 4527095
+                            $one = Db::connect($sportDb)->name('sports_football_match')
+                                ->alias('m')
+                                ->field('c.short_name_en as competition_name,h.short_name_en as home_name, a.short_name_en as away_name')
+                                ->leftJoin('sports_football_competition c','m.competition_id=c.id')
+                                ->leftJoin('sports_football_team h','m.home_team_id=h.id')
+                                ->leftJoin('sports_football_team a','m.away_team_id=a.id')
+                                ->where("m.match_id='$match_id'")
+                                ->find();
+
+                            break;
+                        default:
+                            $one = [];
+                            break;
+
+                    }
+
+                    if(!empty($one)){
+                        $title = $one['competition_name']."[".$one['home_name']." VS".$one['away_name']."]";
+                    }else{
+                        $title = $val['title'];
+                    }
+
 //
 //                    if(!$user_id){
 //                        continue;
@@ -61,7 +87,7 @@ class GgsportsyncController extends HomebaseController {
 						"uid" => $val['room_id'],
 						"showid" => $time,
 						"starttime" => $val['start_time']??$val['starttime'],
-						"title" => $val['title'],
+						"title" => $title,
 						"city" => '好像在火星',
 						"stream" => $val['stream'],
 						"pic_full_url" => $val['cover'],
