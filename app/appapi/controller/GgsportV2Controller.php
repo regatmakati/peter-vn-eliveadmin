@@ -195,7 +195,7 @@ class GgsportV2Controller extends HomebaseController {
             case 1:
                 $list = Db::connect($sportDb)->name('sports_3day_match')->alias('m')
                     ->field('
-                        m.id, m.sport_id, m.match_id, m.match_time as start_time, m.match_status as status, m.pushurl1,
+                        m.id, m.sport_id, m.match_id, m.match_time as start_time, m.match_status as status, m.pushurl1, m.pushurl2, m.pushurl3,
                         m.comp_id as league_id, c.name_zh as league_name,c.short_name_en as league_name_en,c.logo as  league_logo,
                         h.id as home_team_id,m.home as home_team_name,h.name_en as home_team_name_en,h.logo as home_team_logo,
                         a.id as away_team_id,m.away as away_team_name,a.name_en as away_team_name_en,a.logo as away_team_logo
@@ -210,7 +210,7 @@ class GgsportV2Controller extends HomebaseController {
             case 2:
                 $list = Db::connect($sportDb)->name('sports_3day_match')->alias('m')
                     ->field('
-                        m.id, m.sport_id, m.match_id, m.match_time as start_time, m.match_status as status, m.pushurl1, 
+                        m.id, m.sport_id, m.match_id, m.match_time as start_time, m.match_status as status, m.pushurl1, m.pushurl2, m.pushurl3,
                         m.comp_id as league_id, c.name_zh as league_name,c.short_name_en as league_name_en,c.logo as  league_logo,
                         h.id as home_team_id,m.home as home_team_name,h.name_en as home_team_name_en,h.logo as home_team_logo,
                         a.id as away_team_id,m.away as away_team_name,a.name_en as away_team_name_en,a.logo as away_team_logo
@@ -230,10 +230,26 @@ class GgsportV2Controller extends HomebaseController {
         //die(Db::name("live e")->getlastsql());
         //gogozbpull.frgat.cn  key:7Nj6dK7kdPyQSrPdAPT6
         foreach($list as $key => &$val){
-            $stream_id = basename(parse_url($val['pushurl1'], PHP_URL_PATH));
-            $val["flv"] = PrivateKey_tx_cs($stream_id.".flv", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
-            $val["m3u8"] = PrivateKey_tx_cs($stream_id.".m3u8", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
+            $stream1 = basename(parse_url($val['pushurl1'], PHP_URL_PATH));
+            $stream2 = basename(parse_url($val['pushurl2'], PHP_URL_PATH));
+            $stream3 = basename(parse_url($val['pushurl3'], PHP_URL_PATH));
+            if($stream1){
+                $val["flv1"] = PrivateKey_tx_cs($stream1.".flv", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
+            }else{
+                $val["flv1"] = "";
+            }
 
+            if($stream2){
+                $val["flv2"] = PrivateKey_tx_cs($stream2.".flv", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
+            }else{
+                $val["flv2"] = "";
+            }
+
+            if($stream3){
+                $val["flv3"] = PrivateKey_tx_cs($stream3.".flv", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
+            }else{
+                $val["flv3"] = "";
+            }
             $val["title_cn"] = "[{$val['league_name']}] ".$val["home_team_name"]." VS ".$val["away_team_name"];
             $val["title_en"] = "[{$val['league_name_en']}] ".$val["home_team_name_en"]." VS ".$val["away_team_name_en"];
 
