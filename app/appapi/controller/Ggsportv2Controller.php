@@ -7,7 +7,7 @@ namespace app\appapi\controller;
 use cmf\controller\HomeBaseController;
 use think\Db;
 
-class GgsportV2Controller extends HomebaseController {
+class Ggsportv2Controller extends HomebaseController {
 
 
     public static $selfFootballMap = [
