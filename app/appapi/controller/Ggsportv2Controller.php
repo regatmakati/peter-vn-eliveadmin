@@ -234,22 +234,29 @@ class Ggsportv2Controller extends HomebaseController {
             $stream2 = basename(parse_url($val['pushurl2'], PHP_URL_PATH));
             $stream3 = basename(parse_url($val['pushurl3'], PHP_URL_PATH));
             if($stream1){
-                $val["flv1"] = PrivateKey_tx_cs($stream1.".flv", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
+                $val["flv1"] = PrivateKey_tx_cs($stream1.".flv", 0,"https://gogozbpull.hbavnna.cn","7Nj6dK7kdPyQSrPdAPT6");
+                $val["m3u8_1"] = PrivateKey_tx_cs($stream1.".m3u8", 0,"https://gogozbpull.hbavnna.cn","7Nj6dK7kdPyQSrPdAPT6");
             }else{
                 $val["flv1"] = "";
+                $val["m3u8_1"] = "";
             }
 
             if($stream2){
-                $val["flv2"] = PrivateKey_tx_cs($stream2.".flv", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
+                $val["flv2"] = PrivateKey_tx_cs($stream2.".flv", 0,"https://gogozbpull.hbavnna.cn","7Nj6dK7kdPyQSrPdAPT6");
+                $val["m3u8_2"] = PrivateKey_tx_cs($stream2.".m3u8", 0,"https://gogozbpull.hbavnna.cn","7Nj6dK7kdPyQSrPdAPT6");
             }else{
                 $val["flv2"] = "";
+                $val["m3u8_2"] = "";
             }
 
             if($stream3){
-                $val["flv3"] = PrivateKey_tx_cs($stream3.".flv", 0,"https://gogozbpull.frgat.cn","7Nj6dK7kdPyQSrPdAPT6");
+                $val["flv3"] = PrivateKey_tx_cs($stream3.".flv", 0,"https://gogozbpull.hbavnna.cn","7Nj6dK7kdPyQSrPdAPT6");
+                $val["m3u8_3"] = PrivateKey_tx_cs($stream3.".m3u8", 0,"https://gogozbpull.hbavnna.cn","7Nj6dK7kdPyQSrPdAPT6");
             }else{
                 $val["flv3"] = "";
+                $val["m3u8_3"] = "";
             }
+
             $val["title_cn"] = "[{$val['league_name']}] ".$val["home_team_name"]." VS ".$val["away_team_name"];
             $val["title_en"] = "[{$val['league_name_en']}] ".$val["home_team_name_en"]." VS ".$val["away_team_name_en"];
 
